@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBMEC Academy — Curso Interativo de Desenvolvimento Web (Aulas 01 a 21)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ibmec: {
+                            blue: '#022451',
+                            blueLight: '#0a3875',
+                            gold: '#F5A623',
+                            goldLight: '#fef3c7',
+                            bg: '#F8FAFC',
+                            text: '#334155'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #e2e8f0; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+        .code-block {
+            background-color: #0F172A;
+            color: #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 1.15rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8125rem;
+            line-height: 1.6;
+            border: 1px solid #1e293b;
+            white-space: pre;
+            position: relative;
+        }
+        .c-tag { color: #38bdf8; }
+        .c-attr { color: #c084fc; }
+        .c-val { color: #a3e635; }
+        .c-kw { color: #f472b6; }
+        .c-fn { color: #60a5fa; }
+        .c-str { color: #fde047; }
+        .c-num { color: #fb923c; }
+        .c-com { color: #64748b; font-style: italic; }
+
+        .lesson-link.active {
+            background-color: rgba(245, 166, 35, 0.18);
+            color: #F5A623;
+            border-left: 4px solid #F5A623;
+            font-weight: 700;
+        }
+        .trap-badge {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            color: white;
+        }
+        /* code inline dentro do simulado */
+        #quiz-container code {
+            font-family: 'Fira Code', monospace;
+            background: #e2e8f0;
+            padding: 0 4px;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        @media print {
+            #sidebar, #top-lms-bar, .no-print, #lesson-nav-footer { display: none !important; }
+            main { margin-left: 0 !important; padding-top: 0 !important; }
+            .searchable-section { display: block !important; break-inside: avoid; margin-bottom: 1.5rem; }
+            .module-group { display: block !important; }
+        }
+    </style>
+</head>
+<body class="bg-ibmec-bg text-ibmec-text font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 hidden bg-ibmec-blue text-white px-4 py-3 rounded-xl shadow-2xl border border-ibmec-gold flex items-center gap-3 text-xs font-medium transition-all">
+        <i class="fa-solid fa-circle-check text-ibmec-gold text-base"></i>
+        <span id="toast-msg">Ação realizada com sucesso!</span>
+    </div>
+
+    <!-- Top LMS Header -->
+    <header id="top-lms-bar" class="fixed top-0 left-0 right-0 h-16 bg-ibmec-blue text-white z-40 flex items-center justify-between px-4 lg:px-6 shadow-lg border-b border-white/10">
+        <div class="flex items-center gap-3">
+            <button id="mobile-menu-btn" class="lg:hidden text-white hover:text-ibmec-gold p-2 focus:outline-none" aria-label="Abrir menu">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-ibmec-gold text-ibmec-blue flex items-center justify-center font-black text-lg shadow">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <div class="font-extrabold text-sm sm:text-base tracking-tight leading-none flex items-center gap-2">
+                        <span>IBMEC <span class="text-ibmec-gold">Academy</span></span>
+                        <span class="hidden sm:inline-block text-[10px] bg-white/10 px-2 py-0.5 rounded-full font-mono text-slate-200">2026.2</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300 hidden sm:block mt-0.5">Desenvolvimento Web • Prof. Cristiano de Macedo Neto, M.Sc.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Search -->
+        <div class="hidden md:flex items-center gap-3 flex-1 max-w-md mx-4">
+            <div class="relative w-full">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                <input type="text" id="search-input" placeholder="Pesquisar aula, tag, fetch, grid, pegadinha..." class="w-full bg-white/10 text-white placeholder-slate-300 text-xs rounded-xl pl-8 pr-3 py-2 border border-white/15 focus:outline-none focus:border-ibmec-gold">
+            </div>
+        </div>
+
+        <!-- Right Progress & Share -->
+        <div class="flex items-center gap-2 sm:gap-3">
+            <div class="hidden sm:flex flex-col items-end bg-white/10 px-3 py-1.5 rounded-xl border border-white/10">
+                <div class="flex items-center gap-2 text-[11px] font-bold">
+                    <span class="text-slate-200">Progresso:</span>
+                    <span id="header-progress-text" class="text-ibmec-gold">0% (0/22)</span>
+                </div>
+                <div class="w-28 h-1.5 bg-slate-700 rounded-full overflow-hidden mt-1">
+                    <div id="header-progress-bar" class="h-full bg-ibmec-gold transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <button id="view-mode-btn" onclick="toggleViewMode()" class="bg-white/10 hover:bg-white/20 text-white text-xs font-semibold px-3 py-2 rounded-xl border border-white/15 transition flex items-center gap-1.5" title="Alternar entre Modo Aula Passo a Passo e Apostila Completa">
+                <i class="fa-solid fa-book-open text-ibmec-gold"></i>
+                <span id="view-mode-label" class="hidden xl:inline">Modo Apostila</span>
+            </button>
+
+            <button onclick="openShareModal()" class="bg-ibmec-gold hover:bg-amber-400 text-ibmec-blue font-extrabold text-xs px-3.5 py-2 rounded-xl shadow-md transition flex items-center gap-1.5">
+                <i class="fa-solid fa-share-nodes"></i>
+                <span>Compartilhar</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="fixed top-16 bottom-0 left-0 w-80 bg-ibmec-blue text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-30 flex flex-col shadow-2xl border-r border-white/10">
+        <div class="p-3 border-b border-white/10 md:hidden">
+            <input type="text" id="mobile-search-input" placeholder="Buscar tópico no curso..." class="w-full bg-white/10 text-white placeholder-slate-300 text-xs rounded-lg px-3 py-2 border border-white/15 focus:outline-none focus:border-ibmec-gold">
+        </div>
+
+        <div class="p-4 bg-black/20 border-b border-white/10 flex items-center justify-between text-xs">
+            <div>
+                <div class="text-[10px] uppercase tracking-wider text-ibmec-gold font-bold">Trilha de Aprendizado</div>
+                <div id="sidebar-stats" class="text-slate-300 font-medium mt-0.5">0 de 22 tópicos concluídos</div>
+            </div>
+            <button onclick="resetProgress()" class="text-[11px] text-slate-400 hover:text-rose-400 transition" title="Zerar progresso salvo">
+                <i class="fa-solid fa-rotate-left mr-1"></i>Resetar
+            </button>
+        </div>
+
+        <nav class="flex-1 py-3 overflow-y-auto space-y-4 px-3 text-xs" id="nav-menu">
+            <!-- Módulo 1 -->
+            <div>
+                <div class="px-2 py-1 text-[10px] font-extrabold uppercase tracking-wider text-ibmec-gold flex items-center justify-between">
+                    <span>Módulo 1 • Fundamentos Web</span>
+                    <span class="text-slate-400 font-mono">A01–A03</span>
+                </div>
+                <div class="mt-1 space-y-1">
+                    <button onclick="selectLesson('mod1-plano')" data-lesson="mod1-plano" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">1.1 Plano de Ensino & Internet (A01–02)</span>
+                        <i id="check-mod1-plano" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod1-http')" data-lesson="mod1-http" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">1.2 Cliente-Servidor, HTTP & Status (A02)</span>
+                        <i id="check-mod1-http" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod1-dns')" data-lesson="mod1-dns" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">1.3 IP, Portas, URL, DNS & HTTPS (A03)</span>
+                        <i id="check-mod1-dns" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Módulo 2 -->
+            <div>
+                <div class="px-2 py-1 text-[10px] font-extrabold uppercase tracking-wider text-ibmec-gold flex items-center justify-between">
+                    <span>Módulo 2 • HTML5 Completo</span>
+                    <span class="text-slate-400 font-mono">A04–A10</span>
+                </div>
+                <div class="mt-1 space-y-1">
+                    <button onclick="selectLesson('mod2-estrutura')" data-lesson="mod2-estrutura" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">2.1 Estrutura Mínima & Tags (A04)</span>
+                        <i id="check-mod2-estrutura" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod2-texto')" data-lesson="mod2-texto" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">2.2 Títulos, Ênfase & Listas (A05)</span>
+                        <i id="check-mod2-texto" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod2-links')" data-lesson="mod2-links" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">2.3 Links, Âncoras & Imagens (A06)</span>
+                        <i id="check-mod2-links" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod2-tabelas')" data-lesson="mod2-tabelas" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">2.4 Tabelas & Tags Semânticas (A07–08)</span>
+                        <i id="check-mod2-tabelas" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod2-forms')" data-lesson="mod2-forms" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">2.5 Formulários & Validação (A09–10)</span>
+                        <i id="check-mod2-forms" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Módulo 3 -->
+            <div>
+                <div class="px-2 py-1 text-[10px] font-extrabold uppercase tracking-wider text-ibmec-gold flex items-center justify-between">
+                    <span>Módulo 3 • CSS3 & Responsivo</span>
+                    <span class="text-slate-400 font-mono">A11–A16</span>
+                </div>
+                <div class="mt-1 space-y-1">
+                    <button onclick="selectLesson('mod3-seletores')" data-lesson="mod3-seletores" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">3.1 Sintaxe, Seletores & Ligação (A11)</span>
+                        <i id="check-mod3-seletores" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod3-boxmodel')" data-lesson="mod3-boxmodel" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">3.2 Box Model, Cascata & Peso (A12)</span>
+                        <i id="check-mod3-boxmodel" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod3-cores')" data-lesson="mod3-cores" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">3.3 Cores, Fontes, Sombras & Grad (A13)</span>
+                        <i id="check-mod3-cores" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod3-flexbox')" data-lesson="mod3-flexbox" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">3.4 Flexbox: Container & Itens (A14)</span>
+                        <i id="check-mod3-flexbox" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod3-grid')" data-lesson="mod3-grid" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">3.5 CSS Grid Fundamentos (A15)</span>
+                        <i id="check-mod3-grid" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod3-responsivo')" data-lesson="mod3-responsivo" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">3.6 Design Responsivo Pt 1 & 2 (A16)</span>
+                        <i id="check-mod3-responsivo" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Módulo 4 -->
+            <div>
+                <div class="px-2 py-1 text-[10px] font-extrabold uppercase tracking-wider text-ibmec-gold flex items-center justify-between">
+                    <span>Módulo 4 • JavaScript (JS 1–5)</span>
+                    <span class="text-slate-400 font-mono">A17–A21</span>
+                </div>
+                <div class="mt-1 space-y-1">
+                    <button onclick="selectLesson('mod4-fundamentos')" data-lesson="mod4-fundamentos" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">4.1 Tipos, Coerção & Fluxo (JS 1 / A17)</span>
+                        <i id="check-mod4-fundamentos" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod4-funcoes')" data-lesson="mod4-funcoes" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">4.2 Funções & Array Methods (JS 2 / A18)</span>
+                        <i id="check-mod4-funcoes" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod4-dom')" data-lesson="mod4-dom" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">4.3 DOM, Eventos & Delegation (JS 3 / A19)</span>
+                        <i id="check-mod4-dom" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod4-storage')" data-lesson="mod4-storage" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">4.4 JSON & localStorage (JS 4 / A20)</span>
+                        <i id="check-mod4-storage" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod4-async')" data-lesson="mod4-async" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">4.5 Async, Promises & Fetch (JS 5 / A21)</span>
+                        <i id="check-mod4-async" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Módulo 5 -->
+            <div>
+                <div class="px-2 py-1 text-[10px] font-extrabold uppercase tracking-wider text-ibmec-gold flex items-center justify-between">
+                    <span>Módulo 5 • Revisão & Simulado</span>
+                    <span class="text-slate-400 font-mono">PROVA</span>
+                </div>
+                <div class="mt-1 space-y-1">
+                    <button onclick="selectLesson('mod5-raiox')" data-lesson="mod5-raiox" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">5.1 Raio-X da Prova & Pegadinhas</span>
+                        <i id="check-mod5-raiox" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod5-codigos')" data-lesson="mod5-codigos" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">5.2 10 Códigos de Cabeça</span>
+                        <i id="check-mod5-codigos" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                    <button onclick="selectLesson('mod5-simulado')" data-lesson="mod5-simulado" class="lesson-link w-full text-left px-3 py-2 rounded-lg text-slate-200 hover:bg-white/5 transition flex items-center justify-between gap-2">
+                        <span class="truncate">5.3 Simulado Final & 3 Desafios JS</span>
+                        <i id="check-mod5-simulado" class="fa-regular fa-circle text-slate-400"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Mobile Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-20 hidden lg:hidden"></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 lg:ml-80 pt-16">
+        <div class="max-w-5xl mx-auto p-4 sm:p-8 space-y-8 pb-28">
+
+            <!-- Course Welcome Banner -->
+            <div class="bg-gradient-to-r from-ibmec-blue via-ibmec-blueLight to-ibmec-blue text-white p-6 sm:p-8 rounded-2xl shadow-xl relative overflow-hidden no-print">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="space-y-2 max-w-2xl">
+                        <div class="inline-flex items-center gap-2 bg-ibmec-gold text-ibmec-blue text-xs font-extrabold px-3 py-1 rounded-full uppercase">
+                            <i class="fa-solid fa-bolt"></i> Curso Completo Interativo • Aulas 01 a 21
+                        </div>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Desenvolvimento Web — IBMEC</h1>
+                        <p class="text-slate-200 text-xs sm:text-sm leading-relaxed">
+                            Trilha completa com <strong>Fundamentos da Web, HTML5, CSS3 (Box Model, Flexbox, Grid, Responsivo) e JavaScript (ES6+, DOM, localStorage, Async/Fetch)</strong> + Análise estatística do Guia de Estudos.
+                        </p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row md:flex-col gap-2.5 shrink-0">
+                        <button onclick="openShareModal()" class="bg-ibmec-gold hover:bg-amber-400 text-ibmec-blue font-extrabold text-xs px-4 py-2.5 rounded-xl shadow flex items-center justify-center gap-2 transition">
+                            <i class="fa-brands fa-whatsapp text-base"></i> Compartilhar com a Turma
+                        </button>
+                        <button onclick="window.print()" class="bg-white/10 hover:bg-white/20 text-white font-semibold text-xs px-4 py-2.5 rounded-xl border border-white/15 flex items-center justify-center gap-2 transition">
+                            <i class="fa-solid fa-print text-ibmec-gold"></i> Imprimir / Salvar PDF
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-white/15 flex flex-wrap items-center justify-between gap-3 text-xs">
+                    <div class="flex flex-wrap gap-1.5">
+                        <button onclick="setCourseMode('lesson')" id="btn-mode-lesson" class="px-3 py-1.5 rounded-lg font-bold bg-ibmec-gold text-ibmec-blue transition">
+                            <i class="fa-solid fa-graduation-cap mr-1"></i> Modo Curso (Aula por Aula)
+                        </button>
+                        <button onclick="setCourseMode('all')" id="btn-mode-all" class="px-3 py-1.5 rounded-lg font-semibold bg-white/10 hover:bg-white/20 text-white transition">
+                            <i class="fa-solid fa-scroll mr-1"></i> Ver Apostila Completa
+                        </button>
+                    </div>
+                    <div id="lesson-counter-badge" class="font-mono text-xs bg-black/30 px-3 py-1 rounded-lg text-ibmec-gold">
+                        Aula 1 de 22
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================================================================= -->
+            <!-- MÓDULO 1                                                          -->
+            <!-- ================================================================= -->
+            <div class="module-group space-y-10" data-module="mod1">
+                <div class="border-b-2 border-ibmec-blue pb-2 flex items-center justify-between">
+                    <h2 class="text-2xl font-extrabold text-ibmec-blue"><i class="fa-solid fa-globe text-ibmec-gold mr-2"></i>MÓDULO 1: Fundamentos da Web (Aulas 01 a 03)</h2>
+                    <span class="text-xs font-mono bg-ibmec-blue text-white px-2.5 py-1 rounded">Unidade 1</span>
+                </div>
+
+                <section id="mod1-plano" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">1.1 Plano de Ensino & Como a Internet Funciona (Aulas 01 e 02)</h3>
+                    <div class="grid md:grid-cols-2 gap-4 text-sm">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <h4 class="font-bold text-ibmec-blue mb-2">Metodologia & Avaliações (Aula 01)</h4>
+                            <ul class="space-y-1 text-xs">
+                                <li>• <strong>Metodologia:</strong> Expositiva (30%) + Laboratório (50%) + Projeto (20%).</li>
+                                <li>• <strong>Prova AP1:</strong> 10 pontos (Peso 4) — Individual e sem consulta.</li>
+                                <li>• <strong>Prova AP2:</strong> 10 pontos (Peso 4) — Individual e sem consulta.</li>
+                                <li>• <strong>Trabalhos Práticos:</strong> 10 pontos (Peso 2) — Práticas em laboratório/casa.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <h4 class="font-bold text-ibmec-blue mb-2">Infraestrutura Física & Pacotes (Aula 02)</h4>
+                            <ul class="space-y-1 text-xs">
+                                <li>• <strong>Rede de Redes:</strong> Cabos submarinos (fibra óptica), Data Centers e Provedores (ISPs). Conexões: Wi-Fi, 4G/5G, Fibra Óptica.</li>
+                                <li>• <strong>Pacotes e Roteamento:</strong> Dados viajam divididos em pacotes por múltiplos roteadores e são remontados no destino, garantindo <strong>Eficiência</strong> (caminho livre), <strong>Resiliência</strong> (desvio de falhas) e <strong>Velocidade</strong> (tráfego em paralelo).</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center text-xs">
+                        <div class="p-3 bg-ibmec-blue/5 rounded-lg border border-ibmec-blue/15"><strong>1969</strong><br>ARPANET (EUA)</div>
+                        <div class="p-3 bg-ibmec-blue/5 rounded-lg border border-ibmec-blue/15"><strong>1989</strong><br>WWW por Tim Berners-Lee (CERN)</div>
+                        <div class="p-3 bg-ibmec-blue/5 rounded-lg border border-ibmec-blue/15"><strong>1991</strong><br>1ª Página Web Pública + HTML</div>
+                        <div class="p-3 bg-ibmec-blue/5 rounded-lg border border-ibmec-blue/15"><strong>1995+</strong><br>Navegadores Gráficos (Netscape)</div>
+                        <div class="p-3 bg-ibmec-gold/20 rounded-lg border border-ibmec-gold font-semibold"><strong>Hoje</strong><br>Bilhões de dispositivos & HTML5</div>
+                    </div>
+                </section>
+
+                <section id="mod1-http" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">1.2 Arquitetura Cliente-Servidor, Métodos e Status HTTP (Aula 02)</h3>
+                    <p class="text-sm text-slate-600">O <strong>Cliente</strong> (navegador/app) monta a URL e envia uma <strong>Requisição HTTP</strong>. O <strong>Servidor</strong> processa e devolve uma <strong>Resposta</strong> (HTML, CSS, JS, JSON). O navegador então constrói a árvore <strong>DOM (Document Object Model)</strong>.</p>
+
+                    <div class="grid md:grid-cols-3 gap-4 text-xs">
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <h4 class="font-bold text-ibmec-blue mb-2">Papel do Navegador</h4>
+                            <p class="mb-1">• <strong>HTML (Estrutura):</strong> Títulos, textos, imagens, links.</p>
+                            <p class="mb-1">• <strong>CSS (Estilo):</strong> Cores, fontes, layout.</p>
+                            <p>• <strong>JS (Comportamento):</strong> Cliques, animações e lógica dinâmica na árvore DOM.</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <h4 class="font-bold text-ibmec-blue mb-2">Verbos / Métodos HTTP</h4>
+                            <p class="mb-1">• <code class="font-bold text-emerald-700">GET</code>: Solicita/busca dados sem alterá-los.</p>
+                            <p class="mb-1">• <code class="font-bold text-blue-700">POST</code>: Envia novos dados (ex: formulário/cadastro).</p>
+                            <p class="mb-1">• <code class="font-bold text-amber-700">PUT</code>: Atualiza um recurso por completo.</p>
+                            <p>• <code class="font-bold text-red-700">DELETE</code>: Remove um recurso do servidor.</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <h4 class="font-bold text-ibmec-blue mb-2">Códigos de Status HTTP</h4>
+                            <p class="mb-1">• <span class="px-1.5 py-0.5 bg-green-100 text-green-800 rounded font-mono">2xx</span> <strong>Sucesso:</strong> <code>200 OK</code></p>
+                            <p class="mb-1">• <span class="px-1.5 py-0.5 bg-blue-100 text-blue-800 rounded font-mono">3xx</span> <strong>Redirecionamento:</strong> <code>301 Moved</code></p>
+                            <p class="mb-1">• <span class="px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded font-mono">4xx</span> <strong>Erro do Cliente:</strong> <code>404 Not Found</code></p>
+                            <p>• <span class="px-1.5 py-0.5 bg-red-100 text-red-800 rounded font-mono">5xx</span> <strong>Erro do Servidor:</strong> <code>500 Internal Error</code></p>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50 border-l-4 border-ibmec-gold p-4 rounded-r-xl text-xs">
+                        <strong>HTTP é Sem Estado (Stateless):</strong> Cada requisição é independente; o servidor não lembra da anterior. Para manter um usuário logado, usamos <strong>Cookies</strong> (pequenos dados salvos no navegador e reenviados a cada requisição) e <strong>Sessões</strong> (reconhecimento do "crachá" no servidor).
+                    </div>
+                </section>
+
+                <section id="mod1-dns" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">1.3 IP, Portas, Anatomia de URL, DNS e HTTPS (Aulas 02 e 03)</h3>
+
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-sm text-slate-800">IP, Domínio, DNS e Portas</h4>
+                            <p>• <strong>Endereço IP:</strong> Identificador numérico da máquina (ex: <code>192.0.2.1</code>). Como o endereço de um prédio.</p>
+                            <p>• <strong>Portas (Entrada de cada serviço):</strong> Como o número do apartamento. <code>80</code> (HTTP), <code>443</code> (HTTPS), <code>22</code> (SSH - acesso remoto seguro), <code>21</code> (FTP - transferência de arquivos).</p>
+                            <p>• <strong>Consulta DNS (Catálogo da Internet):</strong> 1. Você digita <code>ibmec.br</code> → 2. <em>Resolver DNS</em> consulta os <em>Servidores DNS</em> → 3. Devolve o IP <code>192.0.2.1</code> → 4. Navegador acessa o Servidor Web pelo IP.</p>
+                        </div>
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-sm text-slate-800">HTTP vs HTTPS (Segurança)</h4>
+                            <p>• <strong>HTTP:</strong> Texto puro. Qualquer pessoa na mesma rede pode interceptar e ler.</p>
+                            <p>• <strong>HTTPS:</strong> Camada de criptografia <strong>TLS/SSL</strong>. Protege através de 3 pilares:</p>
+                            <ul class="pl-4 space-y-1">
+                                <li>1. <strong>Criptografia:</strong> Embaralha os dados matematicamente.</li>
+                                <li>2. <strong>Certificado Digital:</strong> Emitido por autoridade confiável, comprova a identidade do site.</li>
+                                <li>3. <strong>Cadeado do Navegador:</strong> Indica conexão segura e certificado válido.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4 pt-2">
+                        <div class="bg-slate-100 p-4 rounded-xl text-center font-mono text-xs border border-slate-200">
+                            <div class="font-sans font-bold text-slate-700 mb-2">Anatomia de uma URL</div>
+                            <span class="text-emerald-700 font-bold">https://</span><span class="text-blue-700 font-bold">www.ibmec.br</span><span class="text-purple-700 font-bold">/cursos/dev-web</span>
+                            <div class="flex justify-around mt-2 font-sans text-[11px] text-slate-600">
+                                <span>Protocolo</span><span>Domínio</span><span>Caminho (Recurso)</span>
+                            </div>
+                        </div>
+                        <div class="bg-slate-100 p-4 rounded-xl text-center font-mono text-xs border border-slate-200">
+                            <div class="font-sans font-bold text-slate-700 mb-2">Hierarquia de Domínios</div>
+                            <span class="text-amber-700 font-bold">blog.</span><span class="text-ibmec-blue font-bold">ibmec</span><span class="text-rose-700 font-bold">.br</span>
+                            <div class="flex justify-around mt-2 font-sans text-[11px] text-slate-600">
+                                <span>Subdomínio (divisão)</span><span>Domínio (dono)</span><span>TLD (Top-Level Domain)</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ================================================================= -->
+            <!-- MÓDULO 2                                                          -->
+            <!-- ================================================================= -->
+            <div class="module-group space-y-10" data-module="mod2">
+                <div class="border-b-2 border-ibmec-blue pb-2 flex items-center justify-between">
+                    <h2 class="text-2xl font-extrabold text-ibmec-blue"><i class="fa-brands fa-html5 text-ibmec-gold mr-2"></i>MÓDULO 2: HTML5 Completo (Aulas 04 a 10)</h2>
+                    <span class="text-xs font-mono bg-ibmec-blue text-white px-2.5 py-1 rounded">Marcação & Semântica</span>
+                </div>
+
+                <section id="mod2-estrutura" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">2.1 Estrutura Mínima, Tags e Atributos (Aula 04)</h3>
+                    <p class="text-xs text-slate-600"><strong>HTML (HyperText Markup Language)</strong> é uma <strong>linguagem de marcação</strong> (não de programação, pois não possui variáveis, condicionais ou loops). Evolução: 1991 (1ª versão) → 1995 (HTML 2.0) → 1999 (HTML 4.01) → 2014 (HTML5).</p>
+                    <div class="grid md:grid-cols-2 gap-4 text-xs">
+                        <div class="space-y-2 bg-slate-50 p-4 rounded-xl border">
+                            <p>• <strong>Tags Pareadas:</strong> Têm abertura e fechamento envolvendo conteúdo (<code>&lt;p&gt;...&lt;/p&gt;</code>, <code>&lt;h1&gt;...&lt;/h1&gt;</code>).</p>
+                            <p>• <strong>Tags Vazias (Self-Closing):</strong> Elemento único, sem fechamento (<code>&lt;img&gt;</code>, <code>&lt;br&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;meta&gt;</code>).</p>
+                            <p>• <strong>Atributos Principais:</strong> <code>id</code> (identificador único na página), <code>class</code> (agrupador reutilizável), <code>src</code> (origem), <code>href</code> (destino), <code>alt</code> (texto alternativo de acessibilidade).</p>
+                            <p>• <strong>Hierarquia:</strong> Elementos aninhados formam relações de pai, filho e neto.</p>
+                        </div>
+                        <div class="code-block"><span class="c-tag">&lt;!DOCTYPE html&gt;</span> <span class="c-com">&lt;!-- 1ª linha: declara HTML5 --&gt;</span>
+<span class="c-tag">&lt;html</span> <span class="c-attr">lang</span>=<span class="c-val">"pt-br"</span><span class="c-tag">&gt;</span> <span class="c-com">&lt;!-- Elemento raiz único --&gt;</span>
+  <span class="c-tag">&lt;head&gt;</span> <span class="c-com">&lt;!-- Metadados invisíveis --&gt;</span>
+    <span class="c-tag">&lt;meta</span> <span class="c-attr">charset</span>=<span class="c-val">"UTF-8"</span><span class="c-tag">&gt;</span> <span class="c-com">&lt;!-- Acentos --&gt;</span>
+    <span class="c-tag">&lt;title&gt;</span>Título da Aba<span class="c-tag">&lt;/title&gt;</span>
+    <span class="c-tag">&lt;link</span> <span class="c-attr">rel</span>=<span class="c-val">"stylesheet"</span> <span class="c-attr">href</span>=<span class="c-val">"estilo.css"</span><span class="c-tag">&gt;</span>
+  <span class="c-tag">&lt;/head&gt;</span>
+  <span class="c-tag">&lt;body&gt;</span> <span class="c-com">&lt;!-- Conteúdo visível --&gt;</span>
+    <span class="c-tag">&lt;h1&gt;</span>Bem-vindo!<span class="c-tag">&lt;/h1&gt;</span>
+  <span class="c-tag">&lt;/body&gt;</span>
+<span class="c-tag">&lt;/html&gt;</span></div>
+                    </div>
+                </section>
+
+                <section id="mod2-texto" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">2.2 Títulos, Parágrafos, Ênfase e Listas (Aula 05)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-2">
+                            <p>• <strong>Títulos (<code>&lt;h1&gt;</code> a <code>&lt;h6&gt;</code>):</strong> Use <strong>apenas um <code>&lt;h1&gt;</code> por página</strong>. Não pule níveis (ex: de h2 para h4) nem escolha pelo tamanho visual (use CSS para tamanho).</p>
+                            <p>• <strong>Parágrafo vs Quebra:</strong> <code>&lt;p&gt;</code> cria um bloco com espaçamento; <code>&lt;br&gt;</code> apenas força quebra de linha.</p>
+                            <p>• <strong>Ênfase Semântica vs Visual:</strong> Prefira <code>&lt;strong&gt;</code> (importância real/negrito) em vez de <code>&lt;b&gt;</code> (só visual), e <code>&lt;em&gt;</code> (ênfase real/itálico) em vez de <code>&lt;i&gt;</code> (só visual). Leitores de tela entendem a semântica.</p>
+                        </div>
+                        <div class="code-block"><span class="c-com">&lt;!-- Lista Não Ordenada (ul) com Lista Ordenada (ol) aninhada DENTRO do &lt;li&gt; --&gt;</span>
+<span class="c-tag">&lt;ul&gt;</span>
+  <span class="c-tag">&lt;li&gt;</span>Frontend
+    <span class="c-tag">&lt;ol&gt;</span>
+      <span class="c-tag">&lt;li&gt;</span>HTML5<span class="c-tag">&lt;/li&gt;</span>
+      <span class="c-tag">&lt;li&gt;</span>CSS3<span class="c-tag">&lt;/li&gt;</span>
+    <span class="c-tag">&lt;/ol&gt;</span>
+  <span class="c-tag">&lt;/li&gt;</span>
+  <span class="c-tag">&lt;li&gt;</span>Backend<span class="c-tag">&lt;/li&gt;</span>
+<span class="c-tag">&lt;/ul&gt;</span></div>
+                    </div>
+                </section>
+
+                <section id="mod2-links" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">2.3 Links, Navegação e Imagens (Aula 06)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-2">
+                            <p>• <strong>Link Absoluto:</strong> URL completa (<code>href="https://ibmec.br"</code>) para sites externos.</p>
+                            <p>• <strong>Link Relativo:</strong> Caminho local (<code>href="sobre.html"</code>) para páginas do mesmo projeto.</p>
+                            <p>• <strong>Nova aba:</strong> <code>target="_blank"</code> abre em outra guia (boa prática: adicionar <code>rel="noopener"</code>).</p>
+                            <p>• <strong>Âncora Interna:</strong> Link com <code>href="#contato"</code> rola até o elemento com <code>id="contato"</code> na mesma página.</p>
+                            <p>• <strong>Imagens (<code>&lt;img&gt;</code>):</strong> Exige <code>src</code> e <code>alt</code> descritivo. Formatos: <strong>JPG</strong> (fotos), <strong>PNG</strong> (transparência), <strong>SVG</strong> (ícones/vetores).</p>
+                        </div>
+                        <div class="code-block"><span class="c-tag">&lt;nav&gt;</span>
+  <span class="c-tag">&lt;a</span> <span class="c-attr">href</span>=<span class="c-val">"index.html"</span><span class="c-tag">&gt;</span>Início (Relativo)<span class="c-tag">&lt;/a&gt;</span>
+  <span class="c-tag">&lt;a</span> <span class="c-attr">href</span>=<span class="c-val">"#contato"</span><span class="c-tag">&gt;</span>Ir para Contato (Âncora)<span class="c-tag">&lt;/a&gt;</span>
+  <span class="c-tag">&lt;a</span> <span class="c-attr">href</span>=<span class="c-val">"https://ibmec.br"</span> <span class="c-attr">target</span>=<span class="c-val">"_blank"</span> <span class="c-attr">rel</span>=<span class="c-val">"noopener"</span><span class="c-tag">&gt;</span>Ibmec<span class="c-tag">&lt;/a&gt;</span>
+<span class="c-tag">&lt;/nav&gt;</span>
+
+<span class="c-tag">&lt;img</span> <span class="c-attr">src</span>=<span class="c-val">"logo.png"</span> <span class="c-attr">alt</span>=<span class="c-val">"Logo do Ibmec"</span> <span class="c-attr">width</span>=<span class="c-val">"200"</span><span class="c-tag">&gt;</span>
+<span class="c-tag">&lt;h2</span> <span class="c-attr">id</span>=<span class="c-val">"contato"</span><span class="c-tag">&gt;</span>Seção de Contato<span class="c-tag">&lt;/h2&gt;</span></div>
+                    </div>
+                </section>
+
+                <section id="mod2-tabelas" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">2.4 Tabelas (Aula 07) & Tags Semânticas (Aula 08)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-slate-800">Tabelas HTML (Apenas para Dados Tabulares!)</h4>
+                            <p>• <code>&lt;table&gt;</code> (container), <code>&lt;tr&gt;</code> (linha), <code>&lt;th&gt;</code> (célula de cabeçalho em negrito/centralizada), <code>&lt;td&gt;</code> (célula de dado).</p>
+                            <p>• Seções semânticas: <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code> e <code>&lt;tfoot&gt;</code>.</p>
+                            <p>• Mesclagem: <code>colspan="2"</code> (mescla 2 colunas) e <code>rowspan="2"</code> (mescla 2 linhas). <strong>Nunca use tabelas para layout!</strong></p>
+                            <div class="code-block"><span class="c-tag">&lt;table&gt;</span>
+  <span class="c-tag">&lt;thead&gt;&lt;tr&gt;&lt;th</span> <span class="c-attr">colspan</span>=<span class="c-val">"2"</span><span class="c-tag">&gt;</span>Notas<span class="c-tag">&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;</span>
+  <span class="c-tag">&lt;tbody&gt;</span>
+    <span class="c-tag">&lt;tr&gt;&lt;td</span> <span class="c-attr">rowspan</span>=<span class="c-val">"2"</span><span class="c-tag">&gt;</span>João<span class="c-tag">&lt;/td&gt;&lt;td&gt;</span>AP1: 8.5<span class="c-tag">&lt;/td&gt;&lt;/tr&gt;</span>
+    <span class="c-tag">&lt;tr&gt;&lt;td&gt;</span>AP2: 9.0<span class="c-tag">&lt;/td&gt;&lt;/tr&gt;</span>
+  <span class="c-tag">&lt;/tbody&gt;</span>
+<span class="c-tag">&lt;/table&gt;</span></div>
+                        </div>
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-slate-800">Tags Semânticas (Acessibilidade, SEO e Legibilidade)</h4>
+                            <ul class="space-y-1.5 bg-slate-50 p-4 rounded-xl border">
+                                <li>• <code>&lt;header&gt;</code>: Cabeçalho da página ou seção.</li>
+                                <li>• <code>&lt;nav&gt;</code>: Menu principal de links de navegação.</li>
+                                <li>• <code>&lt;main&gt;</code>: Conteúdo principal e <strong>único</strong> da página.</li>
+                                <li>• <code>&lt;section&gt;</code>: Agrupamento temático dentro da página (ex: seção "Nossos Serviços").</li>
+                                <li>• <code>&lt;article&gt;</code>: Conteúdo <strong>independente e completo</strong> que faz sentido sozinho (post de blog, notícia).</li>
+                                <li>• <code>&lt;aside&gt;</code>: Conteúdo secundário/complementar (sidebar, caixa "Você Sabia?").</li>
+                                <li>• <code>&lt;footer&gt;</code>: Rodapé (copyright, links úteis).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="mod2-forms" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">2.5 Formulários HTML5 & Validação Nativa (Aulas 09 e 10)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-2">
+                            <p>• <strong><code>&lt;form action="/url" method="post"&gt;</code>:</strong> <code>action</code> define para onde enviar; <code>method</code> define o verbo HTTP (GET ou POST).</p>
+                            <p>• <strong><code>&lt;label for="id"&gt;</code>:</strong> Liga o rótulo ao <code>id</code> do campo (clicar no texto foca o input). O atributo <code>name</code> identifica o dado enviado ao servidor.</p>
+                            <p>• <strong>Tipos de Input:</strong> <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>, <code>checkbox</code> (múltipla escolha), <code>radio</code> (escolha única), <code>date</code>, <code>color</code>, <code>range</code>, <code>tel</code>, <code>url</code>.</p>
+                            <p>• <strong>Outros elementos:</strong> <code>&lt;textarea rows="4" cols="30"&gt;</code> (texto longo), <code>&lt;select&gt;</code> com <code>&lt;option value="..."&gt;</code>, <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> (agrupamento com borda), <code>&lt;button type="submit | reset | button"&gt;</code>.</p>
+                            <p>• <strong>Validação Nativa (Sem JS):</strong> <code>required</code> (obrigatório), <code>placeholder</code> (dica que some, não substitui label), <code>minlength</code>, <code>maxlength</code> e <code>pattern</code> (Regex).</p>
+                        </div>
+                        <div class="code-block"><span class="c-tag">&lt;form</span> <span class="c-attr">action</span>=<span class="c-val">"/inscrever"</span> <span class="c-attr">method</span>=<span class="c-val">"post"</span><span class="c-tag">&gt;</span>
+  <span class="c-tag">&lt;fieldset&gt;</span>
+    <span class="c-tag">&lt;legend&gt;</span>Dados Pessoais<span class="c-tag">&lt;/legend&gt;</span>
+    <span class="c-tag">&lt;label</span> <span class="c-attr">for</span>=<span class="c-val">"cep"</span><span class="c-tag">&gt;</span>CEP:<span class="c-tag">&lt;/label&gt;</span>
+    <span class="c-tag">&lt;input</span> <span class="c-attr">type</span>=<span class="c-val">"text"</span> <span class="c-attr">id</span>=<span class="c-val">"cep"</span> <span class="c-attr">name</span>=<span class="c-val">"cep"</span>
+           <span class="c-attr">pattern</span>=<span class="c-val">"[0-9]{5}-[0-9]{3}"</span>
+           <span class="c-attr">placeholder</span>=<span class="c-val">"00000-000"</span> <span class="c-attr">required</span><span class="c-tag">&gt;</span>
+  <span class="c-tag">&lt;/fieldset&gt;</span>
+  <span class="c-tag">&lt;button</span> <span class="c-attr">type</span>=<span class="c-val">"submit"</span><span class="c-tag">&gt;</span>Enviar<span class="c-tag">&lt;/button&gt;</span>
+<span class="c-tag">&lt;/form&gt;</span></div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ================================================================= -->
+            <!-- MÓDULO 3                                                          -->
+            <!-- ================================================================= -->
+            <div class="module-group space-y-10" data-module="mod3">
+                <div class="border-b-2 border-ibmec-blue pb-2 flex items-center justify-between">
+                    <h2 class="text-2xl font-extrabold text-ibmec-blue"><i class="fa-brands fa-css3-alt text-ibmec-gold mr-2"></i>MÓDULO 3: CSS3 Completo (Aulas 11 a 16)</h2>
+                    <span class="text-xs font-mono bg-ibmec-blue text-white px-2.5 py-1 rounded">Estilo, Layout & Responsividade</span>
+                </div>
+
+                <section id="mod3-seletores" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">3.1 Sintaxe, Seletores e Formas de Ligar o CSS (Aula 11)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-2">
+                            <p>• <strong>Regra CSS:</strong> <code>seletor { propriedade: valor; }</code>.</p>
+                            <p>• <strong>Formas de Ligar ao HTML:</strong> 1. <em>Inline</em> (<code>style="..."</code> — evitar), 2. <em>Interno</em> (<code>&lt;style&gt;</code> no head — testes), 3. <em>Externo</em> (<code>&lt;link rel="stylesheet" href="estilo.css"&gt;</code> — <strong>recomendado</strong>).</p>
+                            <table class="w-full text-left border-collapse mt-2">
+                                <thead class="bg-slate-100">
+                                    <tr><th class="p-2 border">Tipo de Seletor</th><th class="p-2 border">Exemplo</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td class="p-1.5 border">Elemento / Classe / ID</td><td class="p-1.5 border font-mono">p · .destaque · #topo</td></tr>
+                                    <tr><td class="p-1.5 border">Descendente / Filho direto</td><td class="p-1.5 border font-mono">nav a · ul &gt; li</td></tr>
+                                    <tr><td class="p-1.5 border">Irmão adjacente / Agrupado</td><td class="p-1.5 border font-mono">h1 + p · h1, h2, h3</td></tr>
+                                    <tr><td class="p-1.5 border">Atributo / Pseudo-classe</td><td class="p-1.5 border font-mono">input[type="text"] · a:hover · li:nth-child(2n)</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="code-block"><span class="c-com">/* Seletores combinados e descendentes */</span>
+<span class="c-tag">nav a</span> { <span class="c-attr">color</span>: <span class="c-val">navy</span>; } <span class="c-com">/* todo &lt;a&gt; dentro de &lt;nav&gt; */</span>
+<span class="c-tag">ul &gt; li</span> { <span class="c-attr">list-style</span>: <span class="c-val">none</span>; } <span class="c-com">/* filho direto */</span>
+<span class="c-tag">h1, h2, h3</span> { <span class="c-attr">font-family</span>: <span class="c-val">Georgia</span>; } <span class="c-com">/* agrupa */</span></div>
+                    </div>
+                </section>
+
+                <section id="mod3-boxmodel" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">3.2 Box Model, Cascata, Especificidade e Herança (Aula 12)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-2.5">
+                            <p>• <strong>Camadas (dentro → fora):</strong> <code>content → padding → border → margin</code>.</p>
+                            <p>• <strong>Atalhos:</strong> 2 valores (<code>padding: 10px 20px</code> = vertical e horizontal). 4 valores = <strong>topo, direita, baixo, esquerda</strong> (sentido horário). <code>margin: 0 auto</code> centraliza bloco na horizontal.</p>
+                            <p>• <strong>Display:</strong> <code>block</code> (ocupa linha toda), <code>inline</code> (ignora width/height), <code>inline-block</code> (fica na linha mas aceita width/height), <code>none</code> (remove elemento).</p>
+                            <p>• <strong>Especificidade (Peso):</strong> <code>Inline (1000) &gt; ID (100) &gt; Classe/Atributo/Pseudo-classe (10) &gt; Elemento (1)</code>. Empate: vence a <strong>última regra declarada</strong>. <code>!important</code> vence tudo (evite).</p>
+                            <p class="font-mono bg-slate-100 p-2 rounded">Exemplos: <strong>#menu a</strong> = 101 | <strong>.nav a:hover</strong> = 21 | <strong>#topo p.destaque</strong> = 111 | <strong>ul li a</strong> = 3</p>
+                            <p>• <strong>Herança:</strong> <em>Herdados:</em> <code>color</code>, <code>font-*</code>, <code>line-height</code>, <code>text-align</code>. <em>NÃO herdados:</em> <code>margin</code>, <code>padding</code>, <code>border</code>, <code>background</code>, <code>width</code>, <code>height</code>. (<code>inherit</code> força herança).</p>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="code-block"><span class="c-com">/* Boa prática global no início do CSS */</span>
+<span class="c-tag">*, *::before, *::after</span> {
+  <span class="c-attr">box-sizing</span>: <span class="c-val">border-box</span>; <span class="c-com">/* width inclui padding e border */</span>
+}
+
+<span class="c-tag">.caixa</span> {
+  <span class="c-attr">width</span>: <span class="c-val">200px</span>;
+  <span class="c-attr">padding</span>: <span class="c-val">20px</span>;
+  <span class="c-attr">border</span>: <span class="c-val">5px solid navy</span>;
+}
+<span class="c-com">/* content-box (padrão): 200 + 40 + 10 = 250px reais!
+   border-box (recomendado): 200px finais exatos! */</span></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="mod3-cores" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">3.3 Cores, Tipografia, Web Fonts, Sombras e Gradientes (Aula 13)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-2">
+                            <p>• <strong>Formatos de Cor:</strong> Hexadecimal (<code>#022451</code>), RGB (<code>rgb(2, 36, 81)</code>), RGBA (<code>rgba(0,0,0,0.5)</code>) e HSL (<code>hsl(214, 95%, 16%)</code>).</p>
+                            <p>• <span class="trap-badge px-1.5 py-0.5 rounded font-bold">PEGADINHA</span> <code>opacity</code> deixa o elemento inteiro (e seus filhos) transparente. <code>rgba()</code> aplica transparência <strong>apenas na cor</strong>.</p>
+                            <p>• <span class="trap-badge px-1.5 py-0.5 rounded font-bold">PEGADINHA</span> Gradientes vão em <code>background</code> ou <code>background-image</code>, <strong>nunca</strong> em <code>background-color</code>.</p>
+                            <p>• <strong>Sombras:</strong> <code>box-shadow: x y blur spread(opcional) cor;</code> (<code>inset</code> = sombra interna). Já <code>text-shadow: x y blur cor;</code> <strong>não possui spread-radius</strong>.</p>
+                        </div>
+                        <div class="code-block"><span class="c-tag">body</span> {
+  <span class="c-attr">font-family</span>: <span class="c-str">"Poppins"</span>, <span class="c-val">Arial, sans-serif</span>; <span class="c-com">/* termina em genérica */</span>
+  <span class="c-attr">line-height</span>: <span class="c-num">1.5</span>;
+}
+<span class="c-tag">.card</span> {
+  <span class="c-attr">box-shadow</span>: <span class="c-val">0 4px 12px rgba(0,0,0,.15)</span>;
+  <span class="c-attr">background</span>: <span class="c-val">linear-gradient(135deg, #022451, #F5A623)</span>;
+  <span class="c-com">/* ou radial-gradient(circle, white, navy) */</span>
+}
+<span class="c-tag">h1</span> { <span class="c-attr">text-shadow</span>: <span class="c-val">2px 2px 4px rgba(0,0,0,.4)</span>; }</div>
+                    </div>
+                </section>
+
+                <section id="mod3-flexbox" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">3.4 CSS Flexbox: Container & Itens — 1 Dimensão (Aula 14)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-2">
+                            <p>• <strong>No Container (<code>display: flex</code>):</strong></p>
+                            <ul class="pl-4 space-y-1">
+                                <li>- <code>flex-direction</code>: <code>row</code> (padrão: eixo principal horizontal), <code>row-reverse</code>, <code>column</code>, <code>column-reverse</code>.</li>
+                                <li>- <code>justify-content</code>: Alinha no <strong>eixo principal</strong> (<code>flex-start</code>, <code>center</code>, <code>space-between</code>, <code>space-around</code>, <code>space-evenly</code>).</li>
+                                <li>- <code>align-items</code>: Alinha no <strong>eixo transversal/cruzado</strong> (<code>stretch</code> [padrão], <code>center</code>, <code>flex-start</code>, <code>flex-end</code>).</li>
+                                <li>- <code>flex-wrap</code>: <code>nowrap</code> (padrão: espreme na mesma linha) ou <code>wrap</code> (quebra linha).</li>
+                            </ul>
+                            <div class="bg-red-50 border-l-4 border-red-600 p-2.5 text-red-900 rounded-r">
+                                <strong>🚨 Pegadinha Clássica:</strong> Com <code>flex-direction: column</code>, os eixos trocam de papel! <code>justify-content</code> passa a controlar a <strong>vertical</strong> e <code>align-items</code> a <strong>horizontal</strong>.
+                            </div>
+                            <p>• <strong>Nos Itens (Filhos):</strong> <code>flex-grow</code> (padrão 0), <code>flex-shrink</code> (padrão 1), <code>flex-basis</code> (padrão auto). Atalho <code>flex: 1</code> (equivale a <code>1 1 0%</code>). <code>align-self</code> (sobrescreve align-items para 1 item) e <code>order</code> (padrão 0; valores menores como <code>-1</code> aparecem primeiro sem mudar o HTML).</p>
+                        </div>
+                        <div class="code-block"><span class="c-com">/* Centralizar perfeitamente na tela inteira */</span>
+<span class="c-tag">.tela</span> {
+  <span class="c-attr">display</span>: <span class="c-val">flex</span>;
+  <span class="c-attr">justify-content</span>: <span class="c-val">center</span>;
+  <span class="c-attr">align-items</span>: <span class="c-val">center</span>;
+  <span class="c-attr">height</span>: <span class="c-val">100vh</span>;
+}
+
+<span class="c-com">/* 3 colunas proporcionais (1x, 2x, 1x) */</span>
+<span class="c-tag">.col-1</span> { <span class="c-attr">flex</span>: <span class="c-num">1</span>; }
+<span class="c-tag">.col-2</span> { <span class="c-attr">flex</span>: <span class="c-num">2</span>; } <span class="c-com">/* Recebe o dobro do espaço */</span></div>
+                    </div>
+                </section>
+
+                <section id="mod3-grid" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">3.5 CSS Grid: Fundamentos — 2 Dimensões (Aula 15)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-2">
+                            <p>• <strong>Quando usar:</strong> <strong>Grid</strong> para a estrutura macro da página (2D: linhas e colunas simultaneamente); <strong>Flexbox</strong> para alinhar componentes em uma direção (1D).</p>
+                            <p>• <strong>Fração e Repetição:</strong> <code>1fr</code> representa 1 fração do espaço livre. <code>repeat(3, 1fr)</code> cria 3 colunas iguais.</p>
+                            <p>• <span class="trap-badge px-1.5 py-0.5 rounded font-bold">PEGADINHA</span> <strong>Contagem de Linhas de Grade:</strong> Uma grade de <strong>N colunas tem N+1 linhas</strong>! Portanto, <code>grid-column: 1 / 3</code> começa na linha 1 e termina na linha 3 (ocupando <strong>2 colunas</strong>, equivalente a <code>span 2</code>). <code>1 / -1</code> ocupa a largura toda.</p>
+                        </div>
+                        <div class="code-block"><span class="c-com">/* Grid Responsivo Automático SEM Media Query */</span>
+<span class="c-tag">.galeria</span> {
+  <span class="c-attr">display</span>: <span class="c-val">grid</span>;
+  <span class="c-attr">grid-template-columns</span>: <span class="c-fn">repeat</span>(auto-fit, <span class="c-fn">minmax</span>(200px, 1fr));
+  <span class="c-attr">gap</span>: <span class="c-val">16px</span>;
+}
+<span class="c-com">/* Layout com Áreas Nomeadas */</span>
+<span class="c-tag">.pagina</span> {
+  <span class="c-attr">display</span>: <span class="c-val">grid</span>;
+  <span class="c-attr">grid-template-columns</span>: <span class="c-val">200px 1fr</span>;
+  <span class="c-attr">grid-template-areas</span>:
+    <span class="c-str">"topo topo"</span>
+    <span class="c-str">"menu conteudo"</span>
+    <span class="c-str">"rodape rodape"</span>;
+}
+<span class="c-tag">.topo</span> { <span class="c-attr">grid-area</span>: <span class="c-val">topo</span>; }</div>
+                    </div>
+                </section>
+
+                <section id="mod3-responsivo" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">3.6 Design Responsivo — Parte 1 e Parte 2 (Aula 16)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-2">
+                            <p>• <strong>Meta Viewport:</strong> Obrigatória no <code>&lt;head&gt;</code> (<code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code>) para celulares não encolherem a página como desktop.</p>
+                            <p>• <strong>Mobile-First (Recomendado):</strong> CSS base escrito para telas pequenas e <code>@media (min-width: ...)</code> para adicionar colunas em telas maiores. (Desktop-first usa <code>max-width</code>).</p>
+                            <p>• <strong>Breakpoints Comuns:</strong> <code>576px</code> (Mobile grande), <code>768px</code> (Tablet), <code>992px</code> (Desktop), <code>1200px</code> (Telas grandes).</p>
+                            <p>• <strong>Unidades Relativas:</strong> <code>%</code> (relativo ao pai), <code>vw / vh</code> (1% da largura/altura da janela/viewport), <code>em</code> (relativo à fonte do pai/elemento — pode compor em cascata), <code>rem</code> (sempre relativo à raiz <code>&lt;html&gt;</code>, padrão 16px; truque: <code>html { font-size: 62.5%; }</code> faz <code>1rem = 10px</code>).</p>
+                            <p>• <strong>Imagens e Tipografia Fluida:</strong> <code>img { max-width: 100%; height: auto; }</code>, <code>object-fit: cover</code>, e função <code>clamp(mínimo, ideal, máximo)</code>.</p>
+                        </div>
+                        <div class="code-block"><span class="c-com">/* Mobile-First: 1 coluna no celular, 2 no tablet, 3 no desktop */</span>
+<span class="c-tag">.grid</span> { <span class="c-attr">display</span>: <span class="c-val">grid</span>; <span class="c-attr">grid-template-columns</span>: <span class="c-val">1fr</span>; <span class="c-attr">gap</span>: <span class="c-val">16px</span>; }
+
+<span class="c-kw">@media</span> (<span class="c-attr">min-width</span>: <span class="c-val">768px</span>) {
+  <span class="c-tag">.grid</span> { <span class="c-attr">grid-template-columns</span>: <span class="c-val">1fr 1fr</span>; }
+}
+<span class="c-kw">@media</span> (<span class="c-attr">min-width</span>: <span class="c-val">992px</span>) {
+  <span class="c-tag">.grid</span> { <span class="c-attr">grid-template-columns</span>: <span class="c-fn">repeat</span>(3, 1fr); }
+}
+
+<span class="c-com">/* Tipografia fluida (mín, ideal fluido, máx) */</span>
+<span class="c-tag">h1</span> { <span class="c-attr">font-size</span>: <span class="c-fn">clamp</span>(1.5rem, 4vw, 3rem); }</div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ================================================================= -->
+            <!-- MÓDULO 4                                                          -->
+            <!-- ================================================================= -->
+            <div class="module-group space-y-10" data-module="mod4">
+                <div class="border-b-2 border-ibmec-blue pb-2 flex items-center justify-between">
+                    <h2 class="text-2xl font-extrabold text-ibmec-blue"><i class="fa-brands fa-square-js text-ibmec-gold mr-2"></i>MÓDULO 4: JavaScript Completo (Encontros 1 a 5)</h2>
+                    <span class="text-xs font-mono bg-ibmec-blue text-white px-2.5 py-1 rounded">Lógica, DOM, Storage & Fetch</span>
+                </div>
+
+                <section id="mod4-fundamentos" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">4.1 Variáveis, Tipos, Coerção, Falsy e Controle de Fluxo (Encontro 1 / Aula 17)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-2">
+                            <p>• <strong><code>const</code> vs <code>let</code>:</strong> Use <code>const</code> por padrão e <code>let</code> quando a variável for reatribuída. Evite <code>var</code>.</p>
+                            <p>• <span class="trap-badge px-1.5 py-0.5 rounded font-bold">PEGADINHA</span> <code>const</code> impede reatribuir (<code>arr = []</code> dá erro), mas <strong>NÃO impede alterar o conteúdo interno</strong> de arrays e objetos (<code>arr.push(1)</code> funciona normalmente!).</p>
+                            <p>• <span class="trap-badge px-1.5 py-0.5 rounded font-bold">PEGADINHA</span> <code>typeof null</code> e <code>typeof []</code> ambos retornam <code>"object"</code>!</p>
+                            <p>• <strong>Coerção e Igualdade:</strong> Prefira sempre <code>===</code> (compara valor e tipo) a <code>==</code> (converte tipo). O operador <code>+</code> com string concatena (<code>"5" + 3 → "53"</code>), enquanto <code>-</code> converte para número (<code>"5" - 3 → 2</code>).</p>
+                            <p>• <strong>Valores Falsy (Apenas 6!):</strong> <code>false</code>, <code>0</code>, <code>""</code> (string vazia), <code>null</code>, <code>undefined</code> e <code>NaN</code>. <strong>Todo o resto é Truthy</strong>, inclusive <code>"0"</code>, <code>[]</code> (array vazio) e <code>{}</code> (objeto vazio)!</p>
+                            <p>• <strong>Loops e Entrada:</strong> <code>prompt()</code> devolve sempre <code>string</code> (use <code>Number(prompt(...))</code>). O laço <code>do { ... } while (cond)</code> executa <strong>pelo menos 1 vez</strong>. <code>break</code> encerra o loop; <code>continue</code> pula para a próxima volta.</p>
+                        </div>
+                        <div class="code-block"><span class="c-kw">const</span> frutas = [<span class="c-str">"maçã"</span>];
+frutas.<span class="c-fn">push</span>(<span class="c-str">"uva"</span>); <span class="c-com">// OK! Conteúdo interno pode mudar</span>
+
+console.<span class="c-fn">log</span>(<span class="c-kw">typeof</span> <span class="c-num">null</span>, <span class="c-kw">typeof</span> []); <span class="c-com">// "object" "object"</span>
+console.<span class="c-fn">log</span>(<span class="c-str">"5"</span> + <span class="c-num">3</span>);   <span class="c-com">// "53" (concatenação)</span>
+console.<span class="c-fn">log</span>(<span class="c-str">"5"</span> - <span class="c-num">3</span>);   <span class="c-com">// 2 (subtração numérica)</span>
+console.<span class="c-fn">log</span>(<span class="c-num">5</span> === <span class="c-str">"5"</span>); <span class="c-com">// false (tipos diferentes)</span>
+
+<span class="c-com">// Operador Ternário e Template Literal</span>
+<span class="c-kw">const</span> msg = nota &gt;= <span class="c-num">7</span> ? <span class="c-str">"Aprovado"</span> : <span class="c-str">"Estude"</span>;
+console.<span class="c-fn">log</span>(<span class="c-str">`Resultado de ${nome}: ${msg}`</span>);</div>
+                    </div>
+                </section>
+
+                <section id="mod4-funcoes" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">4.2 Funções, Objetos, ES6+ e Métodos de Array (Encontro 2 / Aula 18)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-2">
+                            <p>• <strong>Funções:</strong> Declaração tradicional (sofre <em>hoisting</em>), Expressão de função e <strong>Arrow Function</strong> (<code>(x) =&gt; x * 3</code> tem retorno implícito). Sem <code>return</code>, qualquer função devolve <code>undefined</code>.</p>
+                            <p>• <strong>Métodos Básicos de Array:</strong> <code>push()</code> (add fim), <code>pop()</code> (remove fim), <code>unshift()</code> (add início), <code>shift()</code> (remove início), <code>includes()</code>, <code>length</code>.</p>
+                            <p>• <strong>ES6+ (Destructuring & Spread):</strong> <code>const { nome, preco } = prod;</code> e <code>const novo = { ...aluno, nota: 9 };</code>. O spread faz <strong>cópia rasa</strong> (objetos aninhados continuam compartilhados).</p>
+                        </div>
+                        <div class="code-block"><span class="c-kw">const</span> triplo = (x) =&gt; x * <span class="c-num">3</span>; <span class="c-com">// Arrow function</span>
+<span class="c-kw">function</span> <span class="c-fn">saudar</span>(nome = <span class="c-str">"aluno"</span>) { <span class="c-kw">return</span> <span class="c-str">`Olá, ${nome}!`</span>; }
+
+<span class="c-com">// Combo Clássico de Prova: filter + map + reduce</span>
+<span class="c-kw">const</span> nomesCaros = produtos
+  .<span class="c-fn">filter</span>(p =&gt; p.preco &gt; <span class="c-num">50</span>)
+  .<span class="c-fn">map</span>(p =&gt; p.nome.<span class="c-fn">toUpperCase</span>());
+
+<span class="c-kw">const</span> totalCarrinho = produtos
+  .<span class="c-fn">reduce</span>((acc, p) =&gt; acc + (p.preco * p.qtd), <span class="c-num">0</span>);</div>
+                    </div>
+
+                    <div class="overflow-x-auto pt-2">
+                        <table class="w-full text-xs text-left border-collapse">
+                            <thead class="bg-ibmec-blue text-white">
+                                <tr>
+                                    <th class="p-2.5 border">Método (Não mutam o original)</th>
+                                    <th class="p-2.5 border">O que faz</th>
+                                    <th class="p-2.5 border">Retorno</th>
+                                    <th class="p-2.5 border">Exemplo Prático</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-white"><td class="p-2 border font-mono font-bold text-ibmec-blue">forEach(fn)</td><td class="p-2 border">Executa algo para cada item</td><td class="p-2 border font-mono text-rose-600">undefined</td><td class="p-2 border font-mono">itens.forEach(i =&gt; console.log(i))</td></tr>
+                                <tr class="bg-slate-50"><td class="p-2 border font-mono font-bold text-ibmec-blue">map(fn)</td><td class="p-2 border">Transforma cada elemento</td><td class="p-2 border">Novo array (mesmo tamanho)</td><td class="p-2 border font-mono">nums.map(n =&gt; n * 2)</td></tr>
+                                <tr class="bg-white"><td class="p-2 border font-mono font-bold text-ibmec-blue">filter(fn)</td><td class="p-2 border">Mantém quem passa no teste</td><td class="p-2 border">Novo array (menor ou igual)</td><td class="p-2 border font-mono">nums.filter(n =&gt; n % 2 === 0)</td></tr>
+                                <tr class="bg-slate-50"><td class="p-2 border font-mono font-bold text-ibmec-blue">reduce(fn, ini)</td><td class="p-2 border">Acumula tudo em um único valor</td><td class="p-2 border">Um valor único</td><td class="p-2 border font-mono">nums.reduce((acc, n) =&gt; acc + n, 0)</td></tr>
+                                <tr class="bg-white"><td class="p-2 border font-mono font-bold text-ibmec-blue">find(fn)</td><td class="p-2 border">Busca o 1º item que passa no teste</td><td class="p-2 border">O item ou <code class="text-rose-600">undefined</code></td><td class="p-2 border font-mono">users.find(u =&gt; u.id === 5)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="mod4-dom" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">4.3 Manipulação do DOM, Eventos e Event Delegation (Encontro 3 / Aula 19)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-2">
+                            <p>• <strong>Seleção:</strong> <code>document.querySelector("#id")</code> (retorna o 1º elemento ou <code>null</code>) e <code>document.querySelectorAll("li")</code> (retorna uma <code>NodeList</code>).</p>
+                            <p>• <span class="trap-badge px-1.5 py-0.5 rounded font-bold">PEGADINHA</span> <code>querySelector</code> retornou <code>null</code>? O script rodou antes do HTML existir! Resolva colocando <code>&lt;script&gt;</code> no fim do <code>&lt;body&gt;</code>, usando o atributo <code>defer</code> ou ouvindo <code>DOMContentLoaded</code>.</p>
+                            <p>• <strong>Segurança:</strong> Prefira <code>el.textContent = "..."</code> em vez de <code>innerHTML</code> para evitar injeção de código malicioso (XSS).</p>
+                            <p>• <strong>Classes e Nós:</strong> <code>el.classList.add / remove / toggle("ativo")</code>. Criar elementos: <code>document.createElement("li")</code> + <code>lista.appendChild(li)</code> + <code>li.remove()</code>.</p>
+                            <p>• <strong>Event Delegation (Delegação de Eventos):</strong> Graças ao <em>event bubbling</em> (borbulhamento), colocamos <strong>um único listener no elemento pai</strong> (ex: <code>&lt;ul&gt;</code>) e identificamos quem foi clicado com <code>e.target</code>. Funciona inclusive para itens criados dinamicamente depois!</p>
+                        </div>
+                        <div class="code-block"><span class="c-com">// 1. Formulário sem recarregar a página</span>
+form.<span class="c-fn">addEventListener</span>(<span class="c-str">"submit"</span>, (e) =&gt; {
+  e.<span class="c-fn">preventDefault</span>(); <span class="c-com">// Impede reload</span>
+  <span class="c-kw">if</span> (!campo.value.<span class="c-fn">trim</span>()) <span class="c-kw">return</span>;
+  adicionarTarefa(campo.value);
+  campo.value = <span class="c-str">""</span>;
+});
+
+<span class="c-com">// 2. Event Delegation na &lt;ul&gt;</span>
+ul.<span class="c-fn">addEventListener</span>(<span class="c-str">"click"</span>, (e) =&gt; {
+  <span class="c-kw">if</span> (e.target.tagName === <span class="c-str">"LI"</span>) {
+    e.target.classList.<span class="c-fn">toggle</span>(<span class="c-str">"concluida"</span>);
+  }
+});</div>
+                    </div>
+                </section>
+
+                <section id="mod4-storage" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">4.4 Persistência com JSON e localStorage (Encontro 4 / Aula 20)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-2">
+                            <p>• <strong>JSON:</strong> Formato textual para transporte/armazenamento. <code>JSON.stringify(obj)</code> converte Objeto/Array → Texto. <code>JSON.parse(texto)</code> converte Texto → Objeto/Array.</p>
+                            <p>• <strong>Regras do <code>localStorage</code>:</strong></p>
+                            <ul class="pl-4 space-y-1">
+                                <li>- <strong>Só armazena texto (strings)</strong> (por isso exige <code>stringify</code> / <code>parse</code>).</li>
+                                <li>- Limite de cerca de <strong>5 MB</strong> por site.</li>
+                                <li>- Os dados <strong>sobrevivem ao fechar a aba</strong> ou navegador.</li>
+                                <li>- <code>getItem("chave")</code> devolve <code>null</code> se a chave não existir.</li>
+                                <li>- <strong>Sem segurança:</strong> Nunca guarde senhas ou dados sensíveis.</li>
+                            </ul>
+                            <p>• <strong>Padrão de Arquitetura:</strong> O array JavaScript é a <strong>fonte da verdade</strong> (não o DOM). Fluxo: <code>alterar array → salvar() → renderizar()</code>.</p>
+                        </div>
+                        <div class="code-block"><span class="c-kw">const</span> CHAVE = <span class="c-str">"tarefas_app"</span>;
+
+<span class="c-kw">function</span> <span class="c-fn">salvar</span>(tarefas) {
+  localStorage.<span class="c-fn">setItem</span>(CHAVE, JSON.<span class="c-fn">stringify</span>(tarefas));
+}
+
+<span class="c-kw">function</span> <span class="c-fn">carregar</span>() {
+  <span class="c-kw">const</span> salvo = localStorage.<span class="c-fn">getItem</span>(CHAVE);
+  <span class="c-kw">return</span> salvo ? JSON.<span class="c-fn">parse</span>(salvo) : [];
+}</div>
+                    </div>
+                </section>
+
+                <section id="mod4-async" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">4.5 Assíncrono, Promises, Async/Await e Fetch API (Tema #1 da Revisão!)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-2">
+                            <p>• <strong>Event Loop:</strong> <code>console.log("1"); setTimeout(() =&gt; console.log("2"), 0); console.log("3");</code> imprime <strong>1, 3, 2</strong> porque o callback assíncrono aguarda a pilha principal esvaziar.</p>
+                            <p>• <strong>Promises (3 Estados):</strong> <code>pending</code> (pendente), <code>fulfilled</code> (resolvida → <code>.then</code>) e <code>rejected</code> (rejeitada → <code>.catch</code>). <code>.finally</code> roda sempre.</p>
+                            <p>• <strong>Regras de Ouro do <code>async / await</code> e <code>fetch</code>:</strong></p>
+                            <ul class="pl-4 space-y-1">
+                                <li>1. <code>await</code> só pode ser usado dentro de uma função <code>async</code> (ou no topo de módulos ES), e toda função <code>async</code> devolve uma <code>Promise</code>.</li>
+                                <li>2. <span class="trap-badge px-1.5 py-0.5 rounded font-bold">PEGADINHA</span> O <code>fetch()</code> <strong>NÃO rejeita (não cai no catch) em erros HTTP 404 ou 500!</strong> Ele só rejeita automaticamente em falha de rede (sem internet). Você <strong>DEVE</strong> checar <code>if (!resp.ok) throw new Error(...)</code>.</li>
+                                <li>3. São necessários <strong>dois <code>await</code></strong>: o 1º para os cabeçalhos da resposta (<code>await fetch(url)</code>) e o 2º para ler o corpo JSON (<code>await resp.json()</code>).</li>
+                                <li>4. <strong>ViaCEP:</strong> Limpar com <code>cep.replace(/\D/g, "")</code> (8 dígitos). CEP inexistente retorna status 200 com <code>{ erro: true }</code>!</li>
+                            </ul>
+                        </div>
+                        <div class="code-block"><span class="c-kw">async function</span> <span class="c-fn">buscarUsuarios</span>(url) {
+  statusEl.textContent = <span class="c-str">"Carregando..."</span>;
+  <span class="c-kw">try</span> {
+    <span class="c-kw">const</span> resp = <span class="c-kw">await</span> <span class="c-fn">fetch</span>(url); <span class="c-com">// 1º await</span>
+    <span class="c-kw">if</span> (!resp.ok) {
+      <span class="c-kw">throw new</span> <span class="c-fn">Error</span>(<span class="c-str">"Erro HTTP: "</span> + resp.status);
+    }
+    <span class="c-kw">const</span> dados = <span class="c-kw">await</span> resp.<span class="c-fn">json</span>(); <span class="c-com">// 2º await</span>
+    statusEl.textContent = <span class="c-str">"Sucesso!"</span>;
+    renderizarLista(dados);
+  } <span class="c-kw">catch</span> (erro) {
+    statusEl.textContent = <span class="c-str">"Falha ao carregar dados."</span>;
+  }
+}</div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ================================================================= -->
+            <!-- MÓDULO 5                                                          -->
+            <!-- ================================================================= -->
+            <div class="module-group space-y-10" data-module="mod5">
+                <div class="border-b-2 border-ibmec-blue pb-2 flex items-center justify-between">
+                    <h2 class="text-2xl font-extrabold text-ibmec-blue"><i class="fa-solid fa-bullseye text-ibmec-gold mr-2"></i>MÓDULO 5: Raio-X da Revisão, Códigos & Simulado</h2>
+                    <span class="text-xs font-mono bg-ibmec-gold text-ibmec-blue font-bold px-2.5 py-1 rounded">Foco Total na Prova</span>
+                </div>
+
+                <section id="mod5-raiox" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">5.1 Raio-X: O Que Mais Caiu nos 43 Exercícios do Guia de Estudos</h3>
+                    <p class="text-xs text-slate-600">Dominar <strong>Async/Fetch/localStorage</strong>, <strong>Métodos de Array</strong> e <strong>DOM/Eventos</strong> já garante cerca de <strong>37% da prova</strong> (16 de 43 exercícios), enquanto Flexbox, Grid e Cascata/Box Model somam outros 12.</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-left border-collapse">
+                            <thead class="bg-ibmec-blue text-white">
+                                <tr>
+                                    <th class="p-2 border">#</th>
+                                    <th class="p-2 border">Tema Cobrado</th>
+                                    <th class="p-2 border text-center">Qtd.</th>
+                                    <th class="p-2 border">Onde Aparece no Guia</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-amber-50/70 font-semibold"><td class="p-2 border">1º</td><td class="p-2 border">Async / Fetch / Promises / localStorage</td><td class="p-2 border text-center">6</td><td class="p-2 border font-mono">F1 a F6 (parte inteira)</td></tr>
+                                <tr class="bg-amber-50/40 font-semibold"><td class="p-2 border">2º</td><td class="p-2 border">Métodos de Array (map, filter, reduce, forEach)</td><td class="p-2 border text-center">5</td><td class="p-2 border font-mono">B4, B5, C2, C4, D2</td></tr>
+                                <tr class="bg-amber-50/40 font-semibold"><td class="p-2 border">3º</td><td class="p-2 border">DOM e Eventos (classList, input, delegation, null)</td><td class="p-2 border text-center">5</td><td class="p-2 border font-mono">C5, C6, C7, D3, D5</td></tr>
+                                <tr><td class="p-2 border">4º</td><td class="p-2 border">CSS Flexbox</td><td class="p-2 border text-center">4</td><td class="p-2 border font-mono">E6, E7, E8, E9</td></tr>
+                                <tr class="bg-slate-50"><td class="p-2 border">5º</td><td class="p-2 border">CSS Grid</td><td class="p-2 border text-center">4</td><td class="p-2 border font-mono">A1, A2, A3, A6</td></tr>
+                                <tr><td class="p-2 border">6º</td><td class="p-2 border">Cascata, Especificidade, Box Model e Herança</td><td class="p-2 border text-center">4</td><td class="p-2 border font-mono">E1, E2, E3, E4</td></tr>
+                                <tr class="bg-slate-50"><td class="p-2 border">7º</td><td class="p-2 border">== vs ===, Coerção de Tipos e Falsy/Truthy</td><td class="p-2 border text-center">4</td><td class="p-2 border font-mono">B1, B2, B9, D1</td></tr>
+                                <tr><td class="p-2 border">8º</td><td class="p-2 border">Design Responsivo (media query, unidades, viewport)</td><td class="p-2 border text-center">3</td><td class="p-2 border font-mono">A4, A5, A6</td></tr>
+                                <tr class="bg-slate-50"><td class="p-2 border">9º</td><td class="p-2 border">const, spread, typeof e push</td><td class="p-2 border text-center">3</td><td class="p-2 border font-mono">B6, B7, B10</td></tr>
+                                <tr><td class="p-2 border">10º</td><td class="p-2 border">Loops e Controle (continue, break, do...while)</td><td class="p-2 border text-center">2</td><td class="p-2 border font-mono">B3, B8</td></tr>
+                                <tr class="bg-slate-50"><td class="p-2 border">11º</td><td class="p-2 border">Funções (arrow, contagem de pares) & Gradientes/Sombra</td><td class="p-2 border text-center">3</td><td class="p-2 border font-mono">C1, C3, E5</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="mod5-codigos" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4 scroll-mt-20">
+                    <h3 class="text-xl font-bold text-ibmec-blue">5.2 Checklist: Os 10 Códigos que Você Precisa Saber Escrever de Cabeça</h3>
+                    <p class="text-xs text-slate-600">Clique em qualquer item para revelar/ocultar o snippet exato cobrado nas questões abertas:</p>
+                    <div class="grid md:grid-cols-2 gap-3 text-xs" id="snippets-accordion">
+                        <div class="border border-slate-200 rounded-xl p-3 bg-slate-50">
+                            <button onclick="toggleSnippet('snip1')" class="w-full text-left font-bold text-ibmec-blue flex justify-between items-center"><span>1. filter + map encadeados</span><i class="fa-solid fa-code text-ibmec-gold"></i></button>
+                            <div id="snip1" class="hidden mt-2 code-block p-2.5 text-[11px]">const res = produtos.filter(p => p.ativo).map(p => p.nome);</div>
+                        </div>
+                        <div class="border border-slate-200 rounded-xl p-3 bg-slate-50">
+                            <button onclick="toggleSnippet('snip2')" class="w-full text-left font-bold text-ibmec-blue flex justify-between items-center"><span>2. reduce de total do carrinho</span><i class="fa-solid fa-code text-ibmec-gold"></i></button>
+                            <div id="snip2" class="hidden mt-2 code-block p-2.5 text-[11px]">const total = itens.reduce((acc, p) => acc + p.preco * p.qtd, 0);</div>
+                        </div>
+                        <div class="border border-slate-200 rounded-xl p-3 bg-slate-50">
+                            <button onclick="toggleSnippet('snip3')" class="w-full text-left font-bold text-ibmec-blue flex justify-between items-center"><span>3. Toggle de classe no clique</span><i class="fa-solid fa-code text-ibmec-gold"></i></button>
+                            <div id="snip3" class="hidden mt-2 code-block p-2.5 text-[11px]">btn.addEventListener("click", () => document.body.classList.toggle("escuro"));</div>
+                        </div>
+                        <div class="border border-slate-200 rounded-xl p-3 bg-slate-50">
+                            <button onclick="toggleSnippet('snip4')" class="w-full text-left font-bold text-ibmec-blue flex justify-between items-center"><span>4. Contador de caracteres com input</span><i class="fa-solid fa-code text-ibmec-gold"></i></button>
+                            <div id="snip4" class="hidden mt-2 code-block p-2.5 text-[11px]">campo.addEventListener("input", (e) => cont.textContent = e.target.value.length);</div>
+                        </div>
+                        <div class="border border-slate-200 rounded-xl p-3 bg-slate-50">
+                            <button onclick="toggleSnippet('snip5')" class="w-full text-left font-bold text-ibmec-blue flex justify-between items-center"><span>5. Lista de tarefas com Event Delegation</span><i class="fa-solid fa-code text-ibmec-gold"></i></button>
+                            <div id="snip5" class="hidden mt-2 code-block p-2.5 text-[11px]">ul.addEventListener("click", (e) => {
+  if (e.target.tagName === "LI") e.target.classList.toggle("feito");
+});</div>
+                        </div>
+                        <div class="border border-slate-200 rounded-xl p-3 bg-slate-50">
+                            <button onclick="toggleSnippet('snip6')" class="w-full text-left font-bold text-ibmec-blue flex justify-between items-center"><span>6. async + fetch + resp.ok + try/catch</span><i class="fa-solid fa-code text-ibmec-gold"></i></button>
+                            <div id="snip6" class="hidden mt-2 code-block p-2.5 text-[11px]">async function carregar() {
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const dados = await r.json();
+  } catch (e) { console.error(e); }
+}</div>
+                        </div>
+                        <div class="border border-slate-200 rounded-xl p-3 bg-slate-50">
+                            <button onclick="toggleSnippet('snip7')" class="w-full text-left font-bold text-ibmec-blue flex justify-between items-center"><span>7. Centralizar na tela + Header space-between</span><i class="fa-solid fa-code text-ibmec-gold"></i></button>
+                            <div id="snip7" class="hidden mt-2 code-block p-2.5 text-[11px]">.centro { display: flex; justify-content: center; align-items: center; height: 100vh; }
+.header { display: flex; justify-content: space-between; align-items: center; }</div>
+                        </div>
+                        <div class="border border-slate-200 rounded-xl p-3 bg-slate-50">
+                            <button onclick="toggleSnippet('snip8')" class="w-full text-left font-bold text-ibmec-blue flex justify-between items-center"><span>8. Grid 3 colunas + Media Query</span><i class="fa-solid fa-code text-ibmec-gold"></i></button>
+                            <div id="snip8" class="hidden mt-2 code-block p-2.5 text-[11px]">.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }</div>
+                        </div>
+                        <div class="border border-slate-200 rounded-xl p-3 bg-slate-50">
+                            <button onclick="toggleSnippet('snip9')" class="w-full text-left font-bold text-ibmec-blue flex justify-between items-center"><span>9. Salvar e carregar com localStorage</span><i class="fa-solid fa-code text-ibmec-gold"></i></button>
+                            <div id="snip9" class="hidden mt-2 code-block p-2.5 text-[11px]">const salvar = (arr) => localStorage.setItem("chave", JSON.stringify(arr));
+const carregar = () => JSON.parse(localStorage.getItem("chave")) || [];</div>
+                        </div>
+                        <div class="border border-slate-200 rounded-xl p-3 bg-slate-50">
+                            <button onclick="toggleSnippet('snip10')" class="w-full text-left font-bold text-ibmec-blue flex justify-between items-center"><span>10. Formulário com preventDefault</span><i class="fa-solid fa-code text-ibmec-gold"></i></button>
+                            <div id="snip10" class="hidden mt-2 code-block p-2.5 text-[11px]">form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  if (!campo.value.trim()) return;
+  adicionarTarefa(campo.value);
+  campo.value = "";
+});</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="mod5-simulado" class="searchable-section bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-8 scroll-mt-20">
+                    <div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                            <h3 class="text-xl font-bold text-ibmec-blue">5.3 Simulado Interativo de Pegadinhas CSS & JS</h3>
+                            <span id="quiz-score" class="text-xs font-bold bg-ibmec-blue text-ibmec-gold px-3 py-1.5 rounded-lg">Acertos: 0 / 10</span>
+                        </div>
+                        <div id="quiz-container" class="space-y-4 text-xs"></div>
+                    </div>
+
+                    <div class="pt-6 border-t border-slate-200 space-y-4">
+                        <h4 class="text-lg font-bold text-ibmec-blue">💻 3 Desafios Práticos de Código (Treino de Sintaxe)</h4>
+                        <div class="space-y-4 text-xs">
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                                <div class="font-bold text-slate-800">Desafio 1: O Combo de Arrays (filter + reduce)</div>
+                                <p class="text-slate-600">Dado o array <code>produtos = [{ nome: "Teclado", preco: 150, disponivel: true }, { nome: "Mouse", preco: 80, disponivel: false }, { nome: "Monitor", preco: 900, disponivel: true }]</code>, filtre apenas os disponíveis e calcule a soma total dos preços.</p>
+                                <textarea class="w-full font-mono text-xs p-3 rounded-lg bg-slate-900 text-emerald-300 border border-slate-700" rows="3" placeholder="// Escreva seu código aqui para praticar..."></textarea>
+                                <button onclick="toggleSnippet('gab-des1')" class="bg-ibmec-blue text-white px-3 py-1.5 rounded-lg font-medium hover:bg-ibmec-blueLight transition">Ver Gabarito Comentado</button>
+                                <div id="gab-des1" class="hidden code-block mt-2"><span class="c-kw">const</span> totalDisponiveis = produtos
+  .<span class="c-fn">filter</span>((p) =&gt; p.disponivel) <span class="c-com">// Mantém apenas disponivel === true</span>
+  .<span class="c-fn">reduce</span>((soma, p) =&gt; soma + p.preco, <span class="c-num">0</span>); <span class="c-com">// Soma os preços iniciando em 0 (Resultado: 1050)</span></div>
+                            </div>
+
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                                <div class="font-bold text-slate-800">Desafio 2: DOM e Delegação de Eventos (Event Delegation)</div>
+                                <p class="text-slate-600">Selecione a <code>&lt;ul id="lista-tarefas"&gt;</code> e adicione um único ouvinte de clique que alterne a classe <code>"concluido"</code> apenas quando o elemento clicado for um <code>&lt;li&gt;</code>.</p>
+                                <textarea class="w-full font-mono text-xs p-3 rounded-lg bg-slate-900 text-emerald-300 border border-slate-700" rows="3" placeholder="// Escreva seu código aqui para praticar..."></textarea>
+                                <button onclick="toggleSnippet('gab-des2')" class="bg-ibmec-blue text-white px-3 py-1.5 rounded-lg font-medium hover:bg-ibmec-blueLight transition">Ver Gabarito Comentado</button>
+                                <div id="gab-des2" class="hidden code-block mt-2"><span class="c-kw">const</span> lista = document.<span class="c-fn">querySelector</span>(<span class="c-str">"#lista-tarefas"</span>);
+lista.<span class="c-fn">addEventListener</span>(<span class="c-str">"click"</span>, (e) =&gt; {
+  <span class="c-kw">if</span> (e.target.tagName === <span class="c-str">"LI"</span>) {
+    e.target.classList.<span class="c-fn">toggle</span>(<span class="c-str">"concluido"</span>);
+  }
+});</div>
+                            </div>
+
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                                <div class="font-bold text-slate-800">Desafio 3: A Estrutura Perfeita do Fetch Assíncrono</div>
+                                <p class="text-slate-600">Crie a função <code>async function carregarDados()</code> com <code>try/catch</code> que busque <code>"https://api.exemplo.com/dados"</code>, valide erros HTTP (404/500) com <code>resp.ok</code> e converta a resposta para JSON.</p>
+                                <textarea class="w-full font-mono text-xs p-3 rounded-lg bg-slate-900 text-emerald-300 border border-slate-700" rows="4" placeholder="// Escreva seu código aqui para praticar..."></textarea>
+                                <button onclick="toggleSnippet('gab-des3')" class="bg-ibmec-blue text-white px-3 py-1.5 rounded-lg font-medium hover:bg-ibmec-blueLight transition">Ver Gabarito Comentado</button>
+                                <div id="gab-des3" class="hidden code-block mt-2"><span class="c-kw">async function</span> <span class="c-fn">carregarDados</span>() {
+  <span class="c-kw">try</span> {
+    <span class="c-kw">const</span> resp = <span class="c-kw">await</span> <span class="c-fn">fetch</span>(<span class="c-str">"https://api.exemplo.com/dados"</span>);
+    <span class="c-kw">if</span> (!resp.ok) <span class="c-kw">throw new</span> <span class="c-fn">Error</span>(<span class="c-str">"Erro HTTP: "</span> + resp.status);
+    <span class="c-kw">const</span> dados = <span class="c-kw">await</span> resp.<span class="c-fn">json</span>();
+    console.<span class="c-fn">log</span>(dados);
+  } <span class="c-kw">catch</span> (erro) {
+    console.<span class="c-fn">error</span>(<span class="c-str">"Falha na requisição:"</span>, erro.message);
+  }
+}</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Notes & Navigation -->
+            <div id="lesson-nav-footer" class="bg-white p-6 rounded-2xl shadow-md border border-slate-200 space-y-5 no-print">
+                <div class="space-y-2">
+                    <label for="student-notes" class="text-xs font-extrabold uppercase tracking-wider text-ibmec-blue flex items-center justify-between">
+                        <span><i class="fa-solid fa-pen-to-square text-ibmec-gold mr-1.5"></i> Minhas Anotações desta Aula (Salvas Automaticamente)</span>
+                        <span id="notes-saved-indicator" class="text-[11px] text-emerald-600 font-medium hidden">✓ Salvo no navegador</span>
+                    </label>
+                    <textarea id="student-notes" rows="2" class="w-full text-xs p-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-ibmec-blue transition" placeholder="Escreva aqui seus lembretes, dúvidas ou pontos de atenção sobre esta aula..."></textarea>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
+                    <button id="btn-prev-lesson" onclick="navigateLesson(-1)" class="px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-100 transition flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-left"></i> Aula Anterior
+                    </button>
+
+                    <button id="btn-complete-lesson" onclick="toggleCurrentLessonComplete()" class="px-5 py-2.5 rounded-xl font-extrabold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-check"></i> <span id="btn-complete-text">Marcar Aula como Concluída</span>
+                    </button>
+
+                    <button id="btn-next-lesson" onclick="completeAndNext()" class="px-5 py-2.5 rounded-xl bg-ibmec-blue hover:bg-ibmec-blueLight text-white text-xs font-extrabold shadow transition flex items-center gap-2">
+                        <span>Concluir e Avançar</span> <i class="fa-solid fa-arrow-right text-ibmec-gold"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Share & Export Modal -->
+    <div id="share-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-5">
+            <div class="flex items-center justify-between border-b pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-ibmec-blue text-ibmec-gold flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-base text-ibmec-blue">Compartilhar Curso com a Turma</h3>
+                        <p class="text-xs text-slate-500">Envie no grupo do WhatsApp ou exporte seu card de evolução</p>
+                    </div>
+                </div>
+                <button onclick="closeShareModal()" class="text-slate-400 hover:text-slate-700 p-1" aria-label="Fechar">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="bg-gradient-to-br from-ibmec-blue to-ibmec-blueLight text-white p-5 rounded-xl space-y-3 border border-ibmec-gold/40">
+                <div class="flex items-center justify-between text-xs">
+                    <span class="font-bold text-ibmec-gold uppercase tracking-wider">Card de Evolução • IBMEC DevWeb</span>
+                    <span id="modal-quiz-badge" class="bg-white/15 px-2.5 py-0.5 rounded-full font-mono">Simulado: 0/10</span>
+                </div>
+                <div class="text-2xl font-black" id="modal-progress-title">0% do Curso Concluído</div>
+                <p class="text-xs text-slate-200">Aulas 01 a 21: Fundamentos Web, HTML5, CSS3 (Box Model, Flexbox, Grid, Responsivo) e JavaScript (ES6+, DOM, localStorage e Async/Fetch).</p>
+            </div>
+
+            <div class="space-y-2.5 text-xs">
+                <button onclick="copyWhatsAppInvite()" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold flex items-center justify-center gap-2 shadow transition">
+                    <i class="fa-brands fa-whatsapp text-base"></i> Copiar Convite + Resumo para WhatsApp da Turma
+                </button>
+                <button onclick="copyProgressCard()" class="w-full py-2.5 px-4 rounded-xl bg-ibmec-blue hover:bg-ibmec-blueLight text-white font-bold flex items-center justify-center gap-2 transition">
+                    <i class="fa-solid fa-trophy text-ibmec-gold"></i> Copiar Meu Card de Progresso
+                </button>
+                <button onclick="downloadStandaloneHTML()" class="w-full py-2.5 px-4 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold flex items-center justify-center gap-2 transition">
+                    <i class="fa-solid fa-download text-ibmec-blue"></i> Baixar Arquivo do Curso (.html) para Enviar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Guarda o HTML original (antes de qualquer manipulação) para o botão "Baixar"
+        const ORIGINAL_HTML = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+        const LESSONS = [
+            'mod1-plano', 'mod1-http', 'mod1-dns',
+            'mod2-estrutura', 'mod2-texto', 'mod2-links', 'mod2-tabelas', 'mod2-forms',
+            'mod3-seletores', 'mod3-boxmodel', 'mod3-cores', 'mod3-flexbox', 'mod3-grid', 'mod3-responsivo',
+            'mod4-fundamentos', 'mod4-funcoes', 'mod4-dom', 'mod4-storage', 'mod4-async',
+            'mod5-raiox', 'mod5-codigos', 'mod5-simulado'
+        ];
+
+        const STORAGE_KEY_COMPLETED = 'ibmec_devweb_completed_v1';
+        const STORAGE_KEY_NOTES = 'ibmec_devweb_notes_v1';
+        const STORAGE_KEY_QUIZ = 'ibmec_devweb_quiz_v3'; // v3: guarda a alternativa escolhida
+
+        // localStorage seguro (não quebra se estiver bloqueado ou corrompido)
+        function loadJSON(key, fallback) {
+            try {
+                const raw = localStorage.getItem(key);
+                return raw ? JSON.parse(raw) : fallback;
+            } catch (e) { return fallback; }
+        }
+        function saveJSON(key, value) {
+            try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* ignora */ }
+        }
+
+        let completedLessons = loadJSON(STORAGE_KEY_COMPLETED, []);
+        let lessonNotes = loadJSON(STORAGE_KEY_NOTES, {});
+        let quizAnswers = loadJSON(STORAGE_KEY_QUIZ, {}); // { idxPergunta: idxAlternativaEscolhida }
+        if (!Array.isArray(completedLessons)) completedLessons = [];
+        let currentLessonId = LESSONS[0];
+        let courseMode = 'lesson';
+        let toastTimer = null;
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            t.classList.remove('hidden');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => t.classList.add('hidden'), 3000);
+        }
+
+        function copyTextToClipboard(text, successMsg) {
+            const fallback = () => {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy'); showToast(successMsg); }
+                catch (e) { showToast('Não foi possível copiar automaticamente.'); }
+                document.body.removeChild(ta);
+            };
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => showToast(successMsg)).catch(fallback);
+            } else {
+                fallback();
+            }
+        }
+
+        function toggleSnippet(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('hidden');
+        }
+
+        function showAllSections() {
+            document.querySelectorAll('.module-group').forEach(g => g.style.display = 'block');
+            document.querySelectorAll('.searchable-section').forEach(s => s.style.display = 'block');
+        }
+
+        function setCourseMode(mode) {
+            courseMode = mode;
+            const btnLesson = document.getElementById('btn-mode-lesson');
+            const btnAll = document.getElementById('btn-mode-all');
+            const modeLabel = document.getElementById('view-mode-label');
+            const footer = document.getElementById('lesson-nav-footer');
+
+            if (mode === 'lesson') {
+                btnLesson.className = 'px-3 py-1.5 rounded-lg font-bold bg-ibmec-gold text-ibmec-blue transition';
+                btnAll.className = 'px-3 py-1.5 rounded-lg font-semibold bg-white/10 hover:bg-white/20 text-white transition';
+                if (modeLabel) modeLabel.textContent = 'Modo Apostila';
+                footer.classList.remove('hidden');
+                selectLesson(currentLessonId, false);
+            } else {
+                btnAll.className = 'px-3 py-1.5 rounded-lg font-bold bg-ibmec-gold text-ibmec-blue transition';
+                btnLesson.className = 'px-3 py-1.5 rounded-lg font-semibold bg-white/10 hover:bg-white/20 text-white transition';
+                if (modeLabel) modeLabel.textContent = 'Modo Curso';
+                footer.classList.add('hidden');
+                showAllSections();
+            }
+        }
+
+        function toggleViewMode() {
+            const input = document.getElementById('search-input');
+            const mob = document.getElementById('mobile-search-input');
+            if (input) input.value = '';
+            if (mob) mob.value = '';
+            setCourseMode(courseMode === 'lesson' ? 'all' : 'lesson');
+        }
+
+        function selectLesson(lessonId, scrollToTop = true) {
+            // Se estava no modo apostila filtrado por busca, volta ao normal
+            currentLessonId = lessonId;
+            const idx = LESSONS.indexOf(lessonId);
+
+            if (courseMode === 'lesson') {
+                document.querySelectorAll('.searchable-section').forEach(sec => {
+                    sec.style.display = (sec.id === lessonId) ? 'block' : 'none';
+                });
+                document.querySelectorAll('.module-group').forEach(group => {
+                    const hasLesson = group.querySelector('#' + lessonId) !== null;
+                    group.style.display = hasLesson ? 'block' : 'none';
+                });
+            } else {
+                // No modo apostila, garante que a seção alvo esteja visível antes de rolar
+                showAllSections();
+                const target = document.getElementById(lessonId);
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            document.querySelectorAll('.lesson-link').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lesson === lessonId);
+            });
+
+            const badge = document.getElementById('lesson-counter-badge');
+            if (badge) badge.textContent = `Aula ${idx + 1} de ${LESSONS.length}`;
+
+            const prevBtn = document.getElementById('btn-prev-lesson');
+            if (prevBtn) {
+                prevBtn.disabled = (idx <= 0);
+                prevBtn.style.opacity = (idx <= 0) ? '0.4' : '1';
+            }
+
+            const notesInput = document.getElementById('student-notes');
+            if (notesInput) notesInput.value = lessonNotes[lessonId] || '';
+
+            updateCompletionUI();
+
+            if (scrollToTop && courseMode === 'lesson') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function navigateLesson(direction) {
+            const nextIdx = LESSONS.indexOf(currentLessonId) + direction;
+            if (nextIdx >= 0 && nextIdx < LESSONS.length) selectLesson(LESSONS[nextIdx]);
+        }
+
+        function toggleCurrentLessonComplete() {
+            const idx = completedLessons.indexOf(currentLessonId);
+            if (idx === -1) {
+                completedLessons.push(currentLessonId);
+                showToast('Aula marcada como concluída! 🎉');
+            } else {
+                completedLessons.splice(idx, 1);
+            }
+            saveJSON(STORAGE_KEY_COMPLETED, completedLessons);
+            updateCompletionUI();
+        }
+
+        function completeAndNext() {
+            if (!completedLessons.includes(currentLessonId)) {
+                completedLessons.push(currentLessonId);
+                saveJSON(STORAGE_KEY_COMPLETED, completedLessons);
+            }
+            const idx = LESSONS.indexOf(currentLessonId);
+            if (idx < LESSONS.length - 1) {
+                selectLesson(LESSONS[idx + 1]);
+                showToast('Aula concluída! Avançando para a próxima...');
+            } else {
+                updateCompletionUI();
+                openShareModal();
+                showToast('Parabéns! Você chegou ao final da trilha! 🏆');
+            }
+        }
+
+        function updateCompletionUI() {
+            const total = LESSONS.length;
+            const done = completedLessons.filter(id => LESSONS.includes(id)).length;
+            const pct = Math.round((done / total) * 100);
+
+            document.getElementById('header-progress-text').textContent = `${pct}% (${done}/${total})`;
+            document.getElementById('header-progress-bar').style.width = `${pct}%`;
+            document.getElementById('sidebar-stats').textContent = `${done} de ${total} tópicos concluídos`;
+
+            LESSONS.forEach(id => {
+                const icon = document.getElementById('check-' + id);
+                if (icon) {
+                    icon.className = completedLessons.includes(id)
+                        ? 'fa-solid fa-circle-check text-emerald-400'
+                        : 'fa-regular fa-circle text-slate-400';
+                }
+            });
+
+            const isDone = completedLessons.includes(currentLessonId);
+            const btnComplete = document.getElementById('btn-complete-lesson');
+            const btnText = document.getElementById('btn-complete-text');
+            if (btnComplete && btnText) {
+                if (isDone) {
+                    btnComplete.className = 'px-5 py-2.5 rounded-xl font-extrabold text-xs bg-emerald-100 text-emerald-800 border border-emerald-300 transition flex items-center gap-2';
+                    btnText.textContent = 'Aula Concluída ✓ (Clique p/ desmarcar)';
+                } else {
+                    btnComplete.className = 'px-5 py-2.5 rounded-xl font-extrabold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow transition flex items-center gap-2';
+                    btnText.textContent = 'Marcar Aula como Concluída';
+                }
+            }
+        }
+
+        function resetProgress() {
+            if (!confirm('Zerar progresso, anotações de quiz e respostas do simulado?')) return;
+            completedLessons = [];
+            quizAnswers = {};
+            try {
+                localStorage.removeItem(STORAGE_KEY_COMPLETED);
+                localStorage.removeItem(STORAGE_KEY_QUIZ);
+            } catch (e) { /* ignora */ }
+            updateCompletionUI();
+            renderQuiz();
+            showToast('Progresso reiniciado.');
+        }
+
+        function quizCorrectCount() {
+            return Object.entries(quizAnswers)
+                .filter(([q, chosen]) => quizQuestions[q] && quizQuestions[q].correct === chosen).length;
+        }
+
+        // Share Modal
+        function openShareModal() {
+            const total = LESSONS.length;
+            const done = completedLessons.length;
+            const pct = Math.round((done / total) * 100);
+
+            document.getElementById('modal-progress-title').textContent = `${pct}% do Curso Concluído (${done}/${total} aulas)`;
+            document.getElementById('modal-quiz-badge').textContent = `Simulado: ${quizCorrectCount()}/${quizQuestions.length}`;
+            const m = document.getElementById('share-modal');
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+        }
+
+        function closeShareModal() {
+            const m = document.getElementById('share-modal');
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        }
+
+        function copyWhatsAppInvite() {
+            const msg = `🚀 *Pessoal! Curso Interativo de Revisão — Desenvolvimento Web (IBMEC)*\n\nJuntei todos os slides (Aulas 01 a 21: Web/HTTP, HTML5, CSS3 Box Model, Flexbox, Grid, Responsivo e JavaScript 1 a 5) com o Guia de Estudos:\n\n✅ *Top 3 temas (cerca de 37% da prova):* Async/Fetch, Métodos de Array (map/filter/reduce) e DOM/Event Delegation.\n⚠️ *Pegadinhas clássicas:* typeof null e [] dão "object", "5"+3 vs "5"-3, fetch não rejeita 404 sozinho (use resp.ok) e flex-direction: column inverte os eixos!\n💻 Inclui os *10 Códigos de Cabeça* e *Simulado Interativo*.`;
+            copyTextToClipboard(msg, 'Resumo formatado copiado para enviar no WhatsApp!');
+        }
+
+        function copyProgressCard() {
+            const pct = Math.round((completedLessons.length / LESSONS.length) * 100);
+            const msg = `🎓 *Meu Progresso no IBMEC Academy — Dev Web*\n📊 Trilha concluída: *${pct}%* (${completedLessons.length}/${LESSONS.length} tópicos)\n🎯 Nota no Simulado de Pegadinhas: *${quizCorrectCount()}/${quizQuestions.length}*\nPronto para a prova de HTML5, CSS3 e JavaScript!`;
+            copyTextToClipboard(msg, 'Card de progresso copiado!');
+        }
+
+        function downloadStandaloneHTML() {
+            const blob = new Blob([ORIGINAL_HTML], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Curso_DevWeb_IBMEC_Completo.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            showToast('Arquivo HTML do curso baixado para compartilhar!');
+        }
+
+        // ---------------- Simulado ----------------
+        const quizQuestions = [
+            {
+                q: '1. Um colega aplicou a classe `.destaque { color: blue; }` em um botão, mas ele continua vermelho devido à regra `#btn-principal { color: red; }`. Ele afirma que adicionar `!important` na classe é a melhor solução. Por que essa prática é desencorajada?',
+                options: [
+                    'Porque o `!important` só funciona em estilos inline aplicados no arquivo HTML.',
+                    'Porque o `!important` quebra a cascata natural do CSS, dificultando manutenções futuras.',
+                    'Porque o navegador ignora a regra `!important` em classes CSS.',
+                    'Porque o CSS Grid conflita com o `!important`.'
+                ],
+                correct: 1,
+                exp: 'O uso de !important subverte a especificidade natural do CSS. Em vez disso, aumente o peso do seletor (ex: encadeando classes ou usando um ID mais específico).'
+            },
+            {
+                q: '2. Ao definir um elemento com `width: 200px`, `padding: 20px` e `border: 5px`, um aluno notou que a largura total ocupada na tela ficou maior que 200px. Qual regra CSS resolve este comportamento padrão (Box Model)?',
+                options: [
+                    '`box-sizing: border-box;`',
+                    '`overflow: hidden;`',
+                    '`margin: 0 auto;`',
+                    '`box-sizing: content-box;`'
+                ],
+                correct: 0,
+                exp: 'Por padrão (content-box), padding e border são somados ao width. Com border-box, o width de 200px é o limite final e os espaçamentos são absorvidos internamente.'
+            },
+            {
+                q: '3. Analise o seletor CSS `.container > p`. Quais elementos parágrafo serão afetados por essa regra?',
+                options: [
+                    'Todos os parágrafos dentro de `.container`, independentemente do nível de aninhamento.',
+                    'Apenas os parágrafos que são filhos diretos do elemento contêiner.',
+                    'Apenas o primeiro parágrafo dentro do contêiner.',
+                    'O elemento `.container` se ele for um parágrafo.'
+                ],
+                correct: 1,
+                exp: 'O combinador > seleciona apenas os filhos diretos (1º nível de profundidade), ignorando elementos &lt;p&gt; que estejam dentro de outras tags filhas (como divs internas).'
+            },
+            {
+                q: '4. Em um layout construído com Flexbox, um aluno usou a propriedade `align-items: center` esperando centralizar os itens horizontalmente, mas eles se centralizaram no eixo vertical. Qual regra ele deveria ter usado para o eixo horizontal?',
+                options: [
+                    '`align-content: center;`',
+                    '`justify-content: center;`',
+                    '`flex-direction: row;`',
+                    '`text-align: center;`'
+                ],
+                correct: 1,
+                exp: 'No Flexbox com flex-direction padrão (row), align-items atua no eixo cruzado (vertical) e justify-content atua no eixo principal (horizontal).'
+            },
+            {
+                q: '5. Um desenvolvedor substituiu todas as antigas declarações `var` de seu arquivo JavaScript por `let`. Qual é a principal diferença de comportamento de escopo introduzida por essa mudança?',
+                options: [
+                    'Variáveis declaradas com `let` não podem ter seu valor reatribuído.',
+                    'O JavaScript agora executará as variáveis de forma assíncrona.',
+                    'A declaração passa a ter escopo de bloco, em vez de escopo de função.',
+                    'Nenhuma, `var` e `let` são sinônimos no ES6.'
+                ],
+                correct: 2,
+                exp: 'O let respeita o escopo de bloco (chaves {} de um if ou for), enquanto o var tem escopo de função e "vaza" para fora do bloco. Além disso, let não pode ser usado antes da declaração (zona morta temporal), evitando bugs causados pelo hoisting do var.'
+            },
+            {
+                q: '6. Para inserir um texto digitado pelo usuário em um elemento HTML, um desenvolvedor usou `div.innerHTML = input.value`. Por que o uso de `textContent` seria mais seguro neste cenário?',
+                options: [
+                    'Porque `textContent` é mais rápido e funciona em navegadores antigos.',
+                    'Porque impede a execução de código malicioso caso o usuário digite tags HTML (ataque XSS).',
+                    'Porque `innerHTML` não aceita strings muito longas.',
+                    'Porque `textContent` converte strings em números automaticamente.'
+                ],
+                correct: 1,
+                exp: 'innerHTML interpreta e renderiza tags HTML. Se um usuário injetar um elemento malicioso (ex: &lt;img src=x onerror=...&gt;), o navegador o executa. textContent trata tudo como texto puro, de forma segura.'
+            },
+            {
+                q: '7. Ao validar o valor de um campo de formulário, um colega escreveu a condição `if (idade == "18")`. Qual é a principal vantagem de substituir `==` por `===` neste código?',
+                options: [
+                    'Omitir os parênteses na condição do `if`.',
+                    'Melhorar o desempenho visual da renderização do formulário.',
+                    'Validar tanto o valor quanto o tipo do dado, evitando conversões implícitas.',
+                    'Garantir que o valor seja convertido para String antes da comparação.'
+                ],
+                correct: 2,
+                exp: 'O === (igualdade estrita) não faz coerção de tipos. Ou seja, compara o tipo E o valor, prevenindo bugs inesperados onde números ou arrays são tratados como strings verdadeiras.'
+            },
+            {
+                q: '8. Um colega tentou definir dois comportamentos para um botão executando `botao.onclick = funcaoA` e logo depois `botao.onclick = funcaoB`. No teste, apenas a segunda função executou. Qual seria a abordagem correta para registrar ambas as funções?',
+                options: [
+                    'Substituindo a atribuição direta pelo método `addEventListener` nativo.',
+                    'Colocando um `await` antes da primeira função.',
+                    'Criando um array de cliques `botao.onclick = [funcaoA, funcaoB]`.',
+                    'Colocando `!important` na primeira declaração.'
+                ],
+                correct: 0,
+                exp: 'Propriedades diretas no objeto DOM (como onclick) sobrescrevem o evento anterior atribuído àquele nó. addEventListener permite "empilhar" múltiplos ouvintes (listeners) independentes no mesmo elemento.'
+            },
+            {
+                q: '9. Ao tentar visualizar os dados vindos de uma API usando `console.log(fetch(url))`, um aluno notou no painel que recebeu apenas um objeto do tipo `Promise` com estado pendente. O que faltou na codificação?',
+                options: [
+                    'Instalar a biblioteca axios externamente no HTML.',
+                    'Declarar a variável como `const` em vez de `let`.',
+                    'Aguardar a resolução da Promise usando `.then()` ou a palavra-chave `await`.',
+                    'Converter a URL para String usando `JSON.stringify`.'
+                ],
+                correct: 2,
+                exp: 'A função fetch é assíncrona. Ela retorna uma Promise (promessa) indicando que o dado chegará no futuro. É preciso usar await (dentro de uma função async) ou o bloco .then() para esperar a resposta.'
+            },
+            {
+                q: '10. Para ocultar um painel, um aluno alterou o CSS via script usando `elemento.style.display = "none"`. Seu colega argumentou que adicionar uma classe CSS via `elemento.classList.add("oculto")` seria mais adequado. Qual é a principal vantagem desta segunda abordagem?',
+                options: [
+                    'Mantém a separação entre estilo e comportamento, facilitando futuras manutenções.',
+                    'O JavaScript executa classes de forma nativa e paralela no servidor.',
+                    'Evita que o usuário veja a mudança através do DevTools.',
+                    'A classe CSS reduz consideravelmente o consumo de memória RAM do navegador.'
+                ],
+                correct: 0,
+                exp: 'Centralizar regras visuais em arquivos CSS via classes mantém o código organizado (separação de responsabilidades). Alterar estilos inline via JS espalha regras visuais pelo código e cria alta especificidade desnecessária.'
+            }
+        ];
+
+        // Converte `texto` em <code>texto</code> (escapando HTML do conteúdo)
+        function fmt(text) {
+            return text
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/`([^`]+)`/g, '<code>$1</code>');
+        }
+
+        function applyAnswerStyles(qIdx, chosen) {
+            const item = quizQuestions[qIdx];
+            item.options.forEach((_, idx) => {
+                const btn = document.getElementById(`qbtn-${qIdx}-${idx}`);
+                btn.disabled = true;
+                if (idx === item.correct) {
+                    btn.className = 'text-left p-2.5 rounded-lg border-2 border-emerald-600 bg-emerald-50 text-emerald-900 font-semibold';
+                } else if (idx === chosen) {
+                    btn.className = 'text-left p-2.5 rounded-lg border-2 border-rose-600 bg-rose-50 text-rose-900';
+                } else {
+                    btn.className = 'text-left p-2.5 rounded-lg border border-slate-200 bg-white opacity-60';
+                }
+            });
+
+            const ok = chosen === item.correct;
+            const expEl = document.getElementById(`qexp-${qIdx}`);
+            expEl.className = 'p-2.5 rounded-lg text-xs mt-2 border ' + (ok
+                ? 'bg-emerald-100 text-emerald-900 border-emerald-300'
+                : 'bg-rose-100 text-rose-900 border-rose-300');
+            // exp contém entidades HTML intencionais (&lt; &gt;), por isso innerHTML
+            expEl.innerHTML = `<strong>${ok ? '✅ Correto!' : '❌ Atenção à pegadinha:'}</strong> ${item.exp}`;
+        }
+
+        function updateQuizScore() {
+            document.getElementById('quiz-score').textContent = `Acertos: ${quizCorrectCount()} / ${quizQuestions.length}`;
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = quizQuestions.map((item, idx) => `
+                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
+                    <div class="font-bold text-slate-800">${fmt(item.q)}</div>
+                    <div class="grid sm:grid-cols-2 gap-2">
+                        ${item.options.map((opt, oIdx) => `
+                            <button onclick="answerQuiz(${idx}, ${oIdx})" id="qbtn-${idx}-${oIdx}" class="text-left p-2.5 rounded-lg border border-slate-300 bg-white hover:border-ibmec-blue transition">
+                                <span class="font-bold mr-1">${String.fromCharCode(65 + oIdx)})</span> ${fmt(opt)}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div id="qexp-${idx}" class="hidden"></div>
+                </div>
+            `).join('');
+
+            // Restaura respostas já dadas
+            Object.entries(quizAnswers).forEach(([q, chosen]) => {
+                if (quizQuestions[q] !== undefined) applyAnswerStyles(Number(q), chosen);
+            });
+            updateQuizScore();
+        }
+
+        function answerQuiz(qIdx, oIdx) {
+            if (quizAnswers[qIdx] !== undefined) return; // só responde uma vez
+            quizAnswers[qIdx] = oIdx;
+            saveJSON(STORAGE_KEY_QUIZ, quizAnswers);
+            applyAnswerStyles(qIdx, oIdx);
+            updateQuizScore();
+        }
+
+        // ---------------- Inicialização ----------------
+        document.addEventListener('DOMContentLoaded', () => {
+            renderQuiz();
+            setCourseMode('lesson');
+
+            const notesInput = document.getElementById('student-notes');
+            const notesIndicator = document.getElementById('notes-saved-indicator');
+            let notesTimer = null;
+            notesInput.addEventListener('input', (e) => {
+                lessonNotes[currentLessonId] = e.target.value;
+                saveJSON(STORAGE_KEY_NOTES, lessonNotes);
+                notesIndicator.classList.remove('hidden');
+                clearTimeout(notesTimer);
+                notesTimer = setTimeout(() => notesIndicator.classList.add('hidden'), 1800);
+            });
+
+            // Menu mobile
+            const btn = document.getElementById('mobile-menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const toggleMenu = () => {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
+            };
+            btn.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+            document.querySelectorAll('.lesson-link').forEach(l => l.addEventListener('click', () => {
+                // fecha o menu somente se estiver aberto (evita abrir sem querer)
+                if (window.innerWidth < 1024 && !sidebar.classList.contains('-translate-x-full')) toggleMenu();
+            }));
+
+            // Fecha o modal com ESC ou clique fora
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeShareModal(); });
+            document.getElementById('share-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'share-modal') closeShareModal();
+            });
+
+            // Busca ao vivo (sincroniza os dois campos e esconde módulos sem resultado)
+            const searchInput = document.getElementById('search-input');
+            const mobSearch = document.getElementById('mobile-search-input');
+
+            const handleSearch = (term) => {
+                const q = term.toLowerCase().trim();
+                if (searchInput.value !== term) searchInput.value = term;
+                if (mobSearch && mobSearch.value !== term) mobSearch.value = term;
+
+                if (!q) {
+                    setCourseMode('lesson');
+                    return;
+                }
+                setCourseMode('all');
+                document.querySelectorAll('.searchable-section').forEach(sec => {
+                    const match = sec.textContent.toLowerCase().includes(q);
+                    sec.style.display = match ? 'block' : 'none';
+                });
+                document.querySelectorAll('.module-group').forEach(group => {
+                    const anyVisible = Array.from(group.querySelectorAll('.searchable-section'))
+                        .some(s => s.style.display !== 'none');
+                    group.style.display = anyVisible ? 'block' : 'none';
+                });
+            };
+
+            searchInput.addEventListener('input', (e) => handleSearch(e.target.value));
+            if (mobSearch) mobSearch.addEventListener('input', (e) => handleSearch(e.target.value));
+        });
+    </script>
+</body>
+</html>
